@@ -1,32 +1,63 @@
-# OS Files
-# macOS
-.DS_Store
-# Windows
-Thumbs.db
-
-# IntelliJ / JetBrains IDE
-.idea/
-*.iml
-out/
-
-# Build / Dependency
-build/
-target/
+# 💡 빌드 결과물 및 임시 파일
+# ----------------------------------------------------
+# Gradle 빌드 디렉토리와 wrapper 설정 파일의 핵심을 제외한 모든 것
+/build/
+/out/
+# 컴파일된 클래스 파일 등
+/bin/
+# Gradle 임시 파일
 .gradle/
+# 예외 처리: Gradle Wrapper jar 파일 (버전 관리를 위해 포함)
 !gradle/wrapper/gradle-wrapper.jar
+# 예외 처리: source code build out (일반적으로 위의 /build/로 충분)
+# !**/src/main/**/build/
+# !**/src/test/**/build/
 
-# Logs
+
+# 🛠️ IDE 및 OS 관련 파일
+# ----------------------------------------------------
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse / STS
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
+HELP.md
+
+# 🔑 민감 정보 및 로컬 환경 설정
+# ----------------------------------------------------
+application.properties
+application.yml
+
+# Docker Compose(DB 비밀번호, 로컬 설정 포함) -- 추후 .env로 처리할 예정
+docker-compose.yml
+
+# DB 데이터 디렉토리 (용량 및 환경 종속성 문제로 제외)
+mysql-data/
+
+# 📜 기타
+# ----------------------------------------------------
+# 로그 파일
 *.log
-
-# Environment / Credentials
-.env
-*.env
-
-# Java
-*.class
-
-# Others
-*.war
-*.jar
-*.zip
-*.tar.gz
