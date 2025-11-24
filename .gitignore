@@ -51,8 +51,8 @@ HELP.md
 application.properties
 application.yml
 
-# Docker Compose(DB 비밀번호, 로컬 설정 포함) -- 추후 .env로 처리할 예정
-docker-compose.yml
+# 환경변수
+.env
 
 # DB 데이터 디렉토리 (용량 및 환경 종속성 문제로 제외)
 mysql-data/
