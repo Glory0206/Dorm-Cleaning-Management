@@ -20,20 +20,20 @@ public class DormController {
 
     // 기숙사 생성
     @PostMapping("/dormitories")
-    public ResponseEntity<Long> createdorm(@RequestBody CreateDormRequestDto request) {
+    public ResponseEntity<Long> createdorm(@RequestBody CreateDormRequestDto dto) {
         Dorm dorm = dormService.createDorm(
-                request.dormCode(),
-                request.dormName());
+                dto.dormCode(),
+                dto.dormName());
         return ResponseEntity.ok(dorm.getId());
     }
 
     // 방 생성
     @PostMapping("/rooms")
-    public ResponseEntity<Long> createRoom(@RequestBody CreateRoomRequestDto request) {
+    public ResponseEntity<Long> createRoom(@RequestBody CreateRoomRequestDto dto) {
         Room room = roomService.createRoom(
-                request.dormCode(),
-                request.floor(),
-                request.roomNumber());
+                dto.dormCode(),
+                dto.floor(),
+                dto.roomNumber());
         return ResponseEntity.ok(room.getId());
     }
 }
