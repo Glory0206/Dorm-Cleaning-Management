@@ -15,8 +15,8 @@ public class Room {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dormitory_id", nullable = false)
-    private Dorm dormitory;
+    @JoinColumn(name = "dorm_id", nullable = false)
+    private Dorm dorm;
 
     private Integer floor;
 
@@ -28,13 +28,13 @@ public class Room {
     private Instant cleanedAt;
 
     @Builder
-    public Room(Dorm dormitory,
+    public Room(Dorm dorm,
             Integer floor,
             String roomNumber,
             RoomStatus status,
             Instant cleanedAt) {
 
-        this.dormitory = dormitory;
+        this.dorm = dorm;
         this.floor = floor;
         this.roomNumber = roomNumber;
         this.status = status != null ? status : RoomStatus.OCCUPIED;
