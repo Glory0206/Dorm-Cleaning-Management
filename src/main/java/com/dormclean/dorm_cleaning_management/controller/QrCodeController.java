@@ -1,5 +1,6 @@
 package com.dormclean.dorm_cleaning_management.controller;
 
+import com.dormclean.dorm_cleaning_management.dto.QrRequestDto;
 import com.dormclean.dorm_cleaning_management.service.QrCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,9 +22,13 @@ public class QrCodeController {
     private String host;
 
     @GetMapping("/api/qr/generate")
-    public ResponseEntity<byte[]> generateQrCode(@RequestParam String dormName, @RequestParam String roomName) {
+    public ResponseEntity<byte[]> generateQrCode(QrRequestDto dto) {
         try{
-            String baseUrl = String.format("%s/index", host);
+            String baseUrl = String.format("%s/check", host);
+
+            // 받은 요청
+            String dormName = dto.getDormName();
+            String roomName = dto.getRoomName();
 
             // 한글 사용을 위한 encode
             String encodedDorm = URLEncoder.encode(dormName, StandardCharsets.UTF_8);
