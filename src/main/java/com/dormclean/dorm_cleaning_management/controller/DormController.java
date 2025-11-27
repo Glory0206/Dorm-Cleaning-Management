@@ -15,11 +15,18 @@ public class DormController {
     private final DormService dormService;
 
     // 기숙사 생성
-    @PostMapping("/dormitories")
+    @PostMapping("/dorms")
     public ResponseEntity<Long> createdorm(@RequestBody CreateDormRequestDto dto) {
         Dorm dorm = dormService.createDorm(
                 dto.dormCode(),
                 dto.dormName());
         return ResponseEntity.ok(dorm.getId());
+    }
+
+    // DormController
+    @DeleteMapping("/dorms/{dormCode}")
+    public ResponseEntity<Void> deleteDorm(@PathVariable String dormCode) {
+        dormService.deleteDorm(dormCode);
+        return ResponseEntity.ok().build();
     }
 }
