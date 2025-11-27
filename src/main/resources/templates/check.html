@@ -34,20 +34,18 @@
             font-weight: bold;
             font-size: 1.2rem;
         }
-        .label { font-size: 0.9rem; color: #666; margin-top: 5px; }
         .status-msg { color: blue; font-size: 0.8rem; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>🏠 기숙사 QR 확인</h1>
-
-    <div class="label">기숙사 이름</div>
+    <h1>🏠 기숙사 Check</h1>
+    <div>기숙사 이름</div>
     <div class="info-box" th:text="${dormName}">데이터 로딩중...</div>
 
-    <div class="label">호실 번호</div>
-    <div class="info-box" th:text="${roomName} + '호'">데이터 로딩중...</div>
+    <div>호실 번호</div>
+    <div class="info-box" th:text="${roomNumber} + '호'">데이터 로딩중...</div>
 
     <p class="status-msg">
         ✅ 안전하게 확인되었습니다.

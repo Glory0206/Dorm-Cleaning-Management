@@ -27,9 +27,9 @@ public class QrCodeServiceImp implements QrCodeService {
     @Transactional
     public byte[] createSecureQr(QrRequestDto dto) {
         String dormName = dto.dormName();
-        String roomName = dto.roomName();
+        String roomNumber = dto.roomNumber();
 
-        QrCode qrCode = qrCodeRepository.findByDormNameAndRoomName(dormName, roomName).orElse(null);
+        QrCode qrCode = qrCodeRepository.findByDormNameAndRoomNumber(dormName, roomNumber).orElse(null);
 
         if (qrCode != null) {
             // 이미 존재하면 -> UUID만 새로고침
@@ -38,7 +38,7 @@ public class QrCodeServiceImp implements QrCodeService {
             // 없으면 -> 새로 생성해서 저장
             qrCode = QrCode.builder()
                     .dormName(dormName)
-                    .roomName(roomName)
+                    .roomNumber(roomNumber)
                     .build();
 
             qrCodeRepository.save(qrCode);
@@ -76,6 +76,6 @@ public class QrCodeServiceImp implements QrCodeService {
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않거나 만료된 QR 코드입니다."));
 
         // 찾은 정보를 DTO로 변환해서 반환
-        return new QrResponseDto(qrCode.getDormName(), qrCode.getRoomName());
+        return new QrResponseDto(qrCode.getDormName(), qrCode.getRoomNumber());
     }
 }

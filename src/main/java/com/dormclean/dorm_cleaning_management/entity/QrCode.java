@@ -25,13 +25,13 @@ public class QrCode {
     private String dormName;
 
     @Column(nullable = false)
-    private String roomName;
+    private String roomNumber;
 
     @Builder
-    public QrCode(String dormName, String roomName) {
+    public QrCode(String dormName, String roomNumber) {
         this.uuid = UUID.randomUUID().toString();
         this.dormName = dormName;
-        this.roomName = roomName;
+        this.roomNumber = roomNumber;
     }
 
     public void refreshUuid() {

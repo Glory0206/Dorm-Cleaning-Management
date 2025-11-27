@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface QrCodeRepository extends JpaRepository<QrCode, Long> {
-    Optional<QrCode> findByDormNameAndRoomName(String dormName, String roomName);
+    Optional<QrCode> findByDormNameAndRoomNumber(String dormName, String roomNumber);
     Optional<QrCode> findByUuid(String uuid);
 }
