@@ -1,6 +1,7 @@
 package com.dormclean.dorm_cleaning_management.entity;
 
-import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
+import com.dormclean.dorm_cleaning_management.entity.enums.CheckOutStatus;
+import com.dormclean.dorm_cleaning_management.entity.enums.CleanStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
@@ -24,7 +25,10 @@ public class Room {
     private String roomNumber;
 
     @Enumerated(EnumType.STRING)
-    private RoomStatus status = RoomStatus.OCCUPIED;
+    private CheckOutStatus checkOutStatus = CheckOutStatus.OCCUPIED;
+
+    @Enumerated(EnumType.STRING)
+    private  CleanStatus cleanStatus = CleanStatus.UNCLEANED;
 
     private Instant cleanedAt;
 
@@ -32,20 +36,24 @@ public class Room {
     public Room(Dorm dorm,
             Integer floor,
             String roomNumber,
-            RoomStatus status,
+            CheckOutStatus checkOutStatus,
+            CleanStatus cleanStatus,
             Instant cleanedAt) {
 
         this.dorm = dorm;
         this.floor = floor;
         this.roomNumber = roomNumber;
-        this.status = status != null ? status : RoomStatus.OCCUPIED;
+        this.checkOutStatus = checkOutStatus != null ? checkOutStatus : CheckOutStatus.OCCUPIED;
+        this.cleanStatus = cleanStatus != null ? cleanStatus : CleanStatus.UNCLEANED;
         this.cleanedAt = cleanedAt;
     }
 
-    public void updateStatus(RoomStatus status) {
-        this.status = status;
+    public void updateCleanStatus(CleanStatus cleanStatus) {
+        this.cleanStatus = cleanStatus;
     }
-
+    public void updateCheckOutStatus(CheckOutStatus checkOutStatus) {
+        this.checkOutStatus = checkOutStatus;
+    }
     public void updateCleanedAt(Instant cleanedAt) {
         this.cleanedAt = cleanedAt;
     }

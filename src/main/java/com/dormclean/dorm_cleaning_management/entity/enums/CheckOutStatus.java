@@ -1,7 +1,6 @@
 package com.dormclean.dorm_cleaning_management.entity.enums;
 
-public enum RoomStatus {
+public enum CheckOutStatus {
     OCCUPIED,
-    CLEANED,
-    DIRTY
+    CHECKOUT
 }

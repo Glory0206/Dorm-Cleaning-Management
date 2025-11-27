@@ -2,6 +2,8 @@ package com.dormclean.dorm_cleaning_management.service;
 
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
+import com.dormclean.dorm_cleaning_management.entity.enums.CheckOutStatus;
+import com.dormclean.dorm_cleaning_management.entity.enums.CleanStatus;
 import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +26,8 @@ public class RoomService {
                 .dorm(dorm)
                 .floor(floor)
                 .roomNumber(roomNumber)
-                .status(Room.RoomStatus.OCCUPIED)
+                .checkOutStatus(CheckOutStatus.OCCUPIED)
+                .cleanStatus(CleanStatus.UNCLEANED)
                 .build();
 
         return roomRepository.save(room);
