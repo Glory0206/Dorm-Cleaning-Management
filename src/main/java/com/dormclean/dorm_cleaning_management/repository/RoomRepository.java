@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
     // 특정 방 조회
-    Room findByRoomNumber(String roomNumber);
+    Optional<Room> findByRoomNumber(String roomNumber);
 
     // 특정 기숙사의 전체 방 조회
     List<Room> findBydorm(Dorm dorm);

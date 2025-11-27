@@ -31,7 +31,7 @@ public class QrCodeServiceImpl implements QrCodeService {
     @Override
     @Transactional
     public byte[] createSecureQr(QrRequestDto dto) {
-        Room room = roomRepository.findByRoomNumber(dto.roomNumber());
+        Room room = roomRepository.findByRoomNumber(dto.roomNumber()).orElseThrow(() -> new RuntimeException("해당 호실의 정보를 찾을 수 없습니다."));
 
         QrCode qrCode = qrCodeRepository.findByRoom(room).orElse(null);
 
