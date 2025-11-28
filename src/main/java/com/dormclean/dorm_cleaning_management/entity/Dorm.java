@@ -8,7 +8,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "dorm")
 public class Dorm {
@@ -32,5 +31,9 @@ public class Dorm {
     public Dorm(String dormCode, String dormName) {
         this.dormCode = dormCode;
         this.dormName = dormName;
+    }
+
+    public void setDormName(String newName) {
+        this.dormName = newName;
     }
 }
