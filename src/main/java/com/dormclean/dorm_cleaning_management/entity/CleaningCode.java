@@ -27,4 +27,8 @@ public class CleaningCode {
         this.dorm = dorm;
         this.code = code;
     }
+
+    public void updateCode(String code){
+        this.code = code;
+    }
 }
