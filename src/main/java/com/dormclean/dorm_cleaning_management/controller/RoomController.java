@@ -21,55 +21,80 @@ import java.util.stream.Collectors;
 @Tag(name = "호실(방) 관리 API", description = "호실(방) 관련 API")
 public class RoomController {
 
-    private final RoomService roomService;
-    private final DormRepository dormRepository;
+        private final RoomService roomService;
+        private final DormRepository dormRepository;
 
-    // 1️⃣ 방 생성
-    @PostMapping("/rooms")
-    public ResponseEntity<Long> createRoom(@RequestBody CreateRoomRequestDto dto) {
-        Room room = roomService.createRoom(dto.dormCode(), dto.floor(), dto.roomNumber());
-        return ResponseEntity.ok(room.getId());
-    }
+        // 특정 생활관의 호실 정보 반환
+        @GetMapping(value = "/rooms", params = "!floor")
+        public ResponseEntity<List<RoomDto>> getRoomsByDorm(@RequestParam Long dormId) {
 
-    // 2️⃣ 특정 Dorm + Floor의 Room 리스트 반환
-    @GetMapping("/rooms")
-    public ResponseEntity<List<RoomDto>> getRooms(
-            @RequestParam Long dormId,
-            @RequestParam Integer floor) {
+                Dorm dorm = dormRepository.findById(dormId)
+                                .orElseThrow(() -> new RuntimeException("Dorm not found"));
 
-        Dorm dorm = dormRepository.findById(dormId)
-                .orElseThrow(() -> new RuntimeException("Dorm not found"));
+                List<RoomDto> rooms = roomService.getRoomsByDorm(dorm)
+                                .stream()
+                                .map(r -> new RoomDto(r.getId(), r.getRoomNumber(), r.getRoomStatus(),
+                                                r.getStatusLabel()))
+                                .collect(Collectors.toList());
 
-        List<RoomDto> rooms = roomService.getRoomsByDormAndFloor(dorm, floor)
-                .stream()
-                .map(r -> new RoomDto(r.getId(), r.getRoomNumber(), r.getRoomStatus(), r.getStatusLabel()))
-                .collect(Collectors.toList());
+                return ResponseEntity.ok(rooms);
+        }
 
-        return ResponseEntity.ok(rooms);
-    }
+        @GetMapping(value = "/rooms", params = "floor")
+        public ResponseEntity<List<RoomDto>> getRoomsByDormAndFloor(
+                        @RequestParam Long dormId,
+                        @RequestParam Integer floor) {
 
-    // 3️⃣ Room 상태 변경
-    @PatchMapping("/rooms/{roomId}/status")
-    public ResponseEntity<Void> updateRoomStatus(
-            @PathVariable Long roomId,
-            @RequestBody RoomStatusUpdateDto dto) {
-        roomService.updateRoomStatus(roomId, dto.roomStatus());
-        return ResponseEntity.ok().build();
-    }
+                Dorm dorm = dormRepository.findById(dormId)
+                                .orElseThrow(() -> new RuntimeException("Dorm not found"));
 
-    // 4️⃣ 특정 Dorm의 층 목록 반환
-    @GetMapping("/floors")
-    public ResponseEntity<List<Integer>> getFloors(@RequestParam Long dormId) {
-        Dorm dorm = dormRepository.findById(dormId)
-                .orElseThrow(() -> new RuntimeException("Dorm not found"));
+                List<RoomDto> rooms = roomService.getRoomsByDormAndFloor(dorm, floor)
+                                .stream()
+                                .map(r -> new RoomDto(r.getId(), r.getRoomNumber(), r.getRoomStatus(),
+                                                r.getStatusLabel()))
+                                .collect(Collectors.toList());
 
-        List<Integer> floors = roomService.getRoomsByDorm(dorm)
-                .stream()
-                .map(Room::getFloor)
-                .distinct()
-                .sorted()
-                .collect(Collectors.toList());
+                return ResponseEntity.ok(rooms);
+        }
 
-        return ResponseEntity.ok(floors);
-    }
+        // 호실 생성
+        @PostMapping("/rooms/create")
+        public ResponseEntity<Long> createRoom(@RequestBody CreateRoomRequestDto dto) {
+                Room room = roomService.createRoom(dto.dormCode(), dto.floor(), dto.roomNumber());
+                return ResponseEntity.ok(room.getId());
+        }
+
+        // 호실 상태 변경
+        @PatchMapping("/rooms/{roomId}/status")
+        public ResponseEntity<Void> updateRoomStatus(
+                        @PathVariable Long roomId,
+                        @RequestBody RoomStatusUpdateDto dto) {
+                roomService.updateRoomStatus(roomId, dto.roomStatus());
+                return ResponseEntity.ok().build();
+        }
+
+        // 생활관 층 목록 반환
+        @GetMapping("/floors")
+        public ResponseEntity<List<Integer>> getFloors(@RequestParam Long dormId) {
+                Dorm dorm = dormRepository.findById(dormId)
+                                .orElseThrow(() -> new RuntimeException("Dorm not found"));
+
+                List<Integer> floors = roomService.getRoomsByDorm(dorm)
+                                .stream()
+                                .map(Room::getFloor)
+                                .distinct()
+                                .sorted()
+                                .collect(Collectors.toList());
+
+                return ResponseEntity.ok(floors);
+        }
+
+        // 호실 삭제
+        @DeleteMapping("/rooms/delete")
+        public ResponseEntity<Void> deleteDorm(
+                        @RequestParam String dormCode,
+                        @RequestParam String roomName) {
+                roomService.deleteRoom(dormCode, roomName);
+                return ResponseEntity.ok().build();
+        }
 }

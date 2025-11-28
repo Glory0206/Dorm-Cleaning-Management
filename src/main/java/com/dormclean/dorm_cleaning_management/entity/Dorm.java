@@ -32,4 +32,8 @@ public class Dorm {
         this.dormCode = dormCode;
         this.dormName = dormName;
     }
+
+    public void setDormName(String newName) {
+        this.dormName = newName;
+    }
 }

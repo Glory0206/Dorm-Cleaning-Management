@@ -7,7 +7,6 @@ import java.time.Instant;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "room")
 public class Room {
@@ -49,9 +48,11 @@ public class Room {
     public void updateStatus(RoomStatus status) {
         this.roomStatus = status;
     }
+
     public void updateCleanedAt(Instant cleanedAt) {
         this.cleanedAt = cleanedAt;
     }
+
     public void assignQrCode(QrCode qrCode) {
         this.qrCode = qrCode;
     }
