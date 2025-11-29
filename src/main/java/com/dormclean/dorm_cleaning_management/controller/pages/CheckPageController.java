@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class CheckPageController {
@@ -34,7 +36,9 @@ public class CheckPageController {
 
         // HTML(뷰)에 데이터 전달
         model.addAttribute("dormName", data.dormName());
+        model.addAttribute("dormCode", dorm.getDormCode());
         model.addAttribute("roomNumber", data.roomNumber());
+
         model.addAttribute("isOccupied", isOccupied);
         model.addAttribute("isVacantDirty", isVacantDirty);
 

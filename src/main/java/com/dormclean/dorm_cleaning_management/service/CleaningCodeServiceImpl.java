@@ -41,9 +41,11 @@ public class CleaningCodeServiceImpl implements  CleaningCodeService {
 
     @Override
     public void useCleaningCode(String cleaningCode, String dormCode) {
+        System.out.println("dorm %s".formatted(dormCode));
         CleaningCode checkCode = cleaningCodeRepository.findByCodeAndDorm_DormCode(cleaningCode, dormCode)
                 .orElseThrow(() -> new IllegalArgumentException("코드가 유효하지 않습니다."));
 
         session.setAttribute("cleaningCode", checkCode.getCode());
+        session.setAttribute("dormCodeForCleaning", dormCode);
     }
 }
