@@ -146,7 +146,7 @@
     <h1>QR 체크인 확인</h1>
 
     <span class="info-label">기숙사 이름</span>
-    <div class="info-box" th:text="${dormCode}">데이터 로딩중...</div>
+    <div class="info-box" th:text="${dormCode} + '동(' + ${dormName} + ')'">데이터 로딩중...</div>
 
     <span class="info-label">호실 번호</span>
     <div class="info-box" th:text="${roomNumber} + '호'">데이터 로딩중...</div>
