@@ -59,8 +59,8 @@
                     <h4 class="mb-3">호실 삭제</h4>
                     <form id="deleteRoomForm">
                         <div class="mb-3">
-                            <label for="deleteRoomId" class="form-label">삭제할 호실 번호</label>
-                            <input type="number" class="form-control" id="deleteRoomId" required>
+                            <label for="deleteRoomNumber" class="form-label">삭제할 호실 번호</label>
+                            <input type="number" class="form-control" id="deleteRoomNumber" required>
                         </div>
                         <div class="form-bottom mt-auto">
                             <button type="submit" class="btn btn-primary">호실 삭제</button>
@@ -175,7 +175,7 @@
             e.preventDefault();
             const dormId = dormSelect.value;
             console.log("before dormCode : "+dormCode);
-            const roomNumber = document.getElementById('deleteRoomId').value;
+            const roomNumber = document.getElementById('deleteRoomNumber').value;
             const statusEl = document.getElementById('deleteRoomStatus');
 
             if (!dormId) {
