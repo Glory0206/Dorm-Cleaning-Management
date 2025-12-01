@@ -20,12 +20,12 @@ public class CleaningCodeController {
 
     @PostMapping("/registration")
     public void registration(@RequestBody RegistrationCleaningCodeRequestDto dto) {
-        cleaningCodeService.registration(dto.dormCode(), dto.cleaningCode());
+        cleaningCodeService.registration(dto.cleaningCode());
     }
 
     @PostMapping("/use-code")
     public ResponseEntity<String> useCode(@RequestBody CleaningCodeDto dto) {
-        cleaningCodeService.useCleaningCode(dto.cleaningCode(), dto.dormCode());
+        cleaningCodeService.useCleaningCode(dto.cleaningCode());
 
         return ResponseEntity.ok("코드 인증되었습니다.");
     }
