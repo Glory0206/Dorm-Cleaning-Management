@@ -165,13 +165,13 @@
         </button>
 
         <button class="btn" style="background-color: #6c757d;"
-                th:if="${session.cleaningCode == null or session.dormCodeForCleaning != dormCode}"
+                th:if="${session.cleaningCode == null}"
                 onclick="requestAuth()">
             <span>🔒 청소자 인증</span>
         </button>
 
         <button class="btn btn-clean"
-                th:if="${session.cleaningCode != null and session.dormCodeForCleaning == dormCode}"
+                th:if="${session.cleaningCode != null}"
                 th:classappend="${!isVacantDirty and !isOccupied} ? 'btn-disabled'"
                 th:onclick="${isVacantDirty or isOccupied} ? 'sendRequest(\'clean\')' : 'return false;'"
                 th:disabled="${!isVacantDirty and !isOccupied}">
@@ -192,7 +192,7 @@
 
         const cleanedDormCode = currentDormCode.trim().replace(/["']/g, "");
 
-        axios.post('/api/cleaning-code/use-code', { cleaningCode: code, dormCode: cleanedDormCode})
+        axios.post('/api/cleaning-code/use-code', { cleaningCode: code})
             .then(response => {
                 alert("인증되었습니다.");
                 location.reload();
