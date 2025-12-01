@@ -93,15 +93,15 @@
 
         // 조회 버튼 클릭 시 호실 정보 갱신
         async function loadRooms() {
-            const dormId = dormSelect.value;
+            const dormCode = dormSelect.value;
 
-            if (!dormId) return;
+            if (!dormCode) return;
 
             roomGrid.innerHTML = '<p>로딩 중...</p>';
             emptyState.style.display = 'none';
 
             try {
-                const res = await fetch(`/api/rooms/info?dormId=${dormId}`);
+                const res = await fetch(`/api/rooms/info?dormCode=${dormCode}`);
                 let rooms = await res.json();
 
                 // 테이블 요소 선택

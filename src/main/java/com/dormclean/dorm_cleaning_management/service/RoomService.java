@@ -1,7 +1,6 @@
 package com.dormclean.dorm_cleaning_management.service;
 
 import com.dormclean.dorm_cleaning_management.dto.CreateRoomRequestDto;
-import com.dormclean.dorm_cleaning_management.dto.DeleteRoomRequestDto;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
 import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
