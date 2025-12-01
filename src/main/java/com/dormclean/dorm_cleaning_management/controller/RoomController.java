@@ -1,6 +1,7 @@
 package com.dormclean.dorm_cleaning_management.controller;
 
 import com.dormclean.dorm_cleaning_management.dto.CreateRoomRequestDto;
+import com.dormclean.dorm_cleaning_management.dto.DeleteRoomRequestDto;
 import com.dormclean.dorm_cleaning_management.dto.RoomDto;
 import com.dormclean.dorm_cleaning_management.dto.RoomStatusUpdateDto;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
@@ -25,7 +26,7 @@ public class RoomController {
         private final DormRepository dormRepository;
 
         // 특정 생활관의 호실 정보 반환
-        @GetMapping(value = "/rooms", params = "!floor")
+        @GetMapping(value = "/rooms/info", params = "!floor")
         public ResponseEntity<List<RoomDto>> getRoomsByDorm(@RequestParam Long dormId) {
 
                 Dorm dorm = dormRepository.findById(dormId)
@@ -40,7 +41,7 @@ public class RoomController {
                 return ResponseEntity.ok(rooms);
         }
 
-        @GetMapping(value = "/rooms", params = "floor")
+        @GetMapping(value = "/rooms/info", params = "floor")
         public ResponseEntity<List<RoomDto>> getRoomsByDormAndFloor(
                         @RequestParam Long dormId,
                         @RequestParam Integer floor) {
@@ -93,8 +94,9 @@ public class RoomController {
         @DeleteMapping("/rooms/delete")
         public ResponseEntity<Void> deleteRoom(
                         @RequestParam long dormId,
-                        @RequestParam String roomName) {
-                roomService.deleteRoom(dormId, roomName);
+                        @RequestParam DeleteRoomRequestDto dto) {
+                System.out.println("roomNumber : " + dto.roomNumber());
+                roomService.deleteRoom(dormId, dto.roomNumber());
                 return ResponseEntity.ok().build();
         }
 }

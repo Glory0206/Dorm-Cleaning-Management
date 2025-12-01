@@ -53,10 +53,10 @@ public class RoomService {
 
     // 호실 삭제
     @Transactional
-    public void deleteRoom(long dormId, String roomName) {
+    public void deleteRoom(long dormId, String roomNumber) {
         Dorm dorm = dormRepository.findById(dormId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 상활관을 찾을 수 없습니다."));
-        Room room = roomRepository.findByDormAndRoomNumber(dorm, roomName)
+        Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
                 .orElseThrow(() -> new IllegalArgumentException("해당 생활관을 찾을 수 없습니다."));
 
         roomRepository.delete(room);

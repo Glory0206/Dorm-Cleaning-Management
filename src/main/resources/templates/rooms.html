@@ -133,7 +133,7 @@
             emptyState.style.display = 'none';
 
             try {
-                const res = await fetch(`/api/rooms?dormId=${dormId}&floor=${floor}`);
+                const res = await fetch(`/api/rooms/info?dormId=${dormId}&floor=${floor}`);
                 const rooms = await res.json();
 
                 roomGrid.innerHTML = '';

@@ -101,7 +101,7 @@
             emptyState.style.display = 'none';
 
             try {
-                const res = await fetch(`/api/rooms?dormId=${dormId}`);
+                const res = await fetch(`/api/rooms/info?dormId=${dormId}`);
                 let rooms = await res.json();
 
                 // 테이블 요소 선택
@@ -174,7 +174,6 @@
         document.getElementById('deleteRoomForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const dormId = dormSelect.value;
-            console.log("before dormCode : "+dormCode);
             const roomNumber = document.getElementById('deleteRoomNumber').value;
             const statusEl = document.getElementById('deleteRoomStatus');
 
