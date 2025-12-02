@@ -7,28 +7,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "cleaning_code")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "cleaning_code")
 public class CleaningCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dorm_id", nullable = false, unique = true)
-    private Dorm dorm;
-
     @Column(nullable = false, length = 10)
-    private String code;
+    private String cleaningCode;
 
     @Builder
-    public CleaningCode(Dorm dorm, String code) {
-        this.dorm = dorm;
-        this.code = code;
+    public CleaningCode(String cleaningCode) {
+        this.cleaningCode = cleaningCode;
     }
 
-    public void updateCode(String code){
-        this.code = code;
+    public void updateCode(String code) {
+        this.cleaningCode = cleaningCode;
     }
 }
