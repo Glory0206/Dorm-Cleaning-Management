@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CleaningCodeServiceImpl implements  CleaningCodeService {
+public class CleaningCodeServiceImpl implements CleaningCodeService {
     private final CleaningCodeRepository cleaningCodeRepository;
     private final HttpSession session;
 
