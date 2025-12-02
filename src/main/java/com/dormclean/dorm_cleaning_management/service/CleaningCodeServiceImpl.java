@@ -11,18 +11,21 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CleaningCodeServiceImpl implements  CleaningCodeService {
+public class CleaningCodeServiceImpl implements CleaningCodeService {
     private final CleaningCodeRepository cleaningCodeRepository;
     private final HttpSession session;
 
     @Override
     @Transactional
     public void registration(String cleaningCode) {
-        Optional<CleaningCode> existingCode = cleaningCodeRepository.findByCleaningCode(cleaningCode);
+        CleaningCode existingCode = cleaningCodeRepository.findAll()
+                .stream()
+                .findFirst()
+                .orElse(null);
 
-        if (existingCode.isPresent()) {
+        if (existingCode != null) {
             // 이미 있다면 덮어쓰기
-            existingCode.get().updateCode(cleaningCode);
+            existingCode.updateCode(cleaningCode);
         } else {
             // 없다면 새로 저장
             CleaningCode newCleaningCode = CleaningCode.builder()
