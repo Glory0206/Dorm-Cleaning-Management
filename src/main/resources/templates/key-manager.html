@@ -52,16 +52,16 @@
         currentKey.value = "";
 
         try{
-            const res = await axios.get("/api/cleaning-code/codes");
-            let cleaningCodes = res.data;
+            const res = await axios.get("/api/cleaning-code/get-code");
+            let cleaningCode = res.data.cleaningCode;
 
-            if (Array.isArray(cleaningCodes) && cleaningCodes.length > 0) {
-                currentKey.value = cleaningCodes[cleaningCodes.length-1].cleaningCode; // DTO의 code 필드 사용
+            if (cleaningCode) {
+                currentKey.value = cleaningCode;
             } else {
-                currentKey.value = "⚠️ 인증코드가 없습니다.";
+                currentKey.value = "⚠️ 인증코드가 존재하지 않습니다.";
             }
         } catch (err) {
-            currentKey.value = `⚠️ 인증코드를 불러오지 못했습니다.`;
+            currentKey.value = "⚠️ 인증코드가 존재하지 않습니다.";
         }
     }
     
