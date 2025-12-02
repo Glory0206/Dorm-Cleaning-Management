@@ -1,19 +1,124 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{fragments/head :: headFragment}"> </head>
-
+    <head th:replace="~{fragments/head :: headFragment}"></head>
 <body>
 <header th:replace="~{fragments/header :: headerFragment}"></header>
 
-<main class="container-fluid px-4 mt-4">
+<div class="container d-flex justify-content-center mb-5">
+    <div class="card qr-card w-100">
+        <div class="card-header">
+            <h4 class="mb-0 fw-bold"><i class="bi bi-qr-code"></i> 생활관 인증코드 생성기</h4>
+            <p class="mb-0 small opacity-75">Dormitory Authentication Code Generator</p>
+        </div>
+        <div class="card-body p-4">
+            <form id="cleaningCodeForm">
+                <div class="mb-3">
+                    <label for="currentKey" class="form-label">현재 인증 코드</label>
+                    <input type="text" class="form-control form-control-lg" id="currentKey" readonly>
+                </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+                <div class="mb-3">
+                    <label for="generatedKey" class="form-label">새로운 인증 코드</label>
+                    <input type="text" class="form-control form-control-lg" id="generatedKey" placeholder="새로운 인증 코드를 입력해주십시오." required>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="button" class="btn orange-btn w-100 py-3 fw-bold rounded-pill" onclick="generateRandomKey()">
+                        자동으로 인증 코드 생성
+                    </button>
+                </div>
+                
+                <button type="submit" class="btn orange-btn w-100 py-3 fw-bold rounded-pill">
+                    생활관 인증 코드 생성하기
+                </button>
+                <p id="createKeyStatus" class="status-msg text-muted">세부 정보를 입력하십시오.</p>
+            </form>
+        </div>
+    </div>
+</div>
 
-    <script>
-    </script>
-</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    function generateRandomKey() {
+        const randomKey = Math.random().toString(36).substring(2, 10).toUpperCase();
+        document.getElementById("generatedKey").value = randomKey;
+    }
+    
+    // 인증키 불러오기
+    async function loadkey() {
+        const currentKey = document.getElementById("currentKey");
+        currentKey.value = "";
+
+        try{
+            const res = await axios.get("/api/cleaning-code/codes");
+            let cleaningCodes = res.data;
+
+            if (Array.isArray(cleaningCodes) && cleaningCodes.length > 0) {
+                currentKey.value = cleaningCodes[0].cleaningCode; // DTO의 code 필드 사용
+            } else {
+                currentKey.value = "⚠️ 인증 코드가 없습니다.";
+            }
+        } catch (err) {
+            currentKey.value = `⚠️ 인증 코드를 불러오지 못했습니다.`;
+        }
+    }
+    
+    loadkey();
+
+    // 인증키 생성하기
+    document.getElementById("cleaningCodeForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const keyValue = document.getElementById("generatedKey").value;
+        const statusEl = document.getElementById("createKeyStatus");
+
+        try {
+            const res = await axios.get('/api/dorms'); // 전체 생활관 조회 API 필요
+            let dorms = res.data;
+
+            await axios.get(`/api/cleaning-code/exist/${dorms[0].dormCode}`);
+            await axios.put("/api/cleaning-code/update", {
+                // dormCode: dorms[0].dormCode,
+                dormCode: "101",
+                cleaningCode: generatedKey
+            }); 
+
+            // for (let i = 0; i < dorms.length; i++) {
+            //     const dorm = dorms[i];
+            //     try{
+            //         await axios.get(`/api/cleaning-code/exist/${dorm.dormCode}`);
+            //         await axios.put("/api/cleaning-code/update", {
+            //             dormCode: dorm.dormCode,
+            //             cleaningCode: generatedKey
+            //         }); 
+            //     } catch (err) {
+            //         if (err.response && err.response.status === 404) {
+            //             // 존재하지 않음 → 새로 생성
+            //             await axios.post("/api/cleaning-code/registration", {
+            //                 dormCode: dorm.dormCode,
+            //                 cleaningCode: generatedKey
+            //             });
+            //         } else {
+            //             console.error(err);
+            //         }
+            //     }
+            // }
+
+
+            statusEl.textContent = `✅ 인증키가 생성되었습니다.`;
+            statusEl.style.color = "blue";
+
+            e.target.reset();
+            // loadkey();
+        } catch (err) {
+            statusEl.textContent = `⚠️ 인증키를 생성하지 못했습니다.`;
+            statusEl.style.color = "red";
+        }
+    });
+
+</script>
 
 <footer th:replace="~{fragments/footer :: footerFragment}"></footer>
 </body>

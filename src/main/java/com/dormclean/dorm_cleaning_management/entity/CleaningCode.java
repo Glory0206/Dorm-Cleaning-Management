@@ -28,7 +28,7 @@ public class CleaningCode {
         this.code = code;
     }
 
-    public void updateCode(String code){
+    public void updateCode(String code) {
         this.code = code;
     }
 }

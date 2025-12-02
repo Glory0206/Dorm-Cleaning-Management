@@ -1,6 +1,5 @@
 package com.dormclean.dorm_cleaning_management.service;
 
-import com.dormclean.dorm_cleaning_management.dto.CleaningCodeDto;
 import com.dormclean.dorm_cleaning_management.entity.CleaningCode;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.repository.CleaningCodeRepository;
@@ -14,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CleaningCodeServiceImpl implements  CleaningCodeService {
+public class CleaningCodeServiceImpl implements CleaningCodeService {
     private final CleaningCodeRepository cleaningCodeRepository;
     private final DormRepository dormRepository;
     private final HttpSession session;
@@ -22,7 +21,8 @@ public class CleaningCodeServiceImpl implements  CleaningCodeService {
     @Override
     @Transactional
     public void registration(String dormCode, String cleaningCode) {
-        Dorm dorm = dormRepository.findByDormCode(dormCode).orElseThrow(() -> new IllegalArgumentException("해당 기숙사가 존재하지 않습니다."));
+        Dorm dorm = dormRepository.findByDormCode(dormCode)
+                .orElseThrow(() -> new IllegalArgumentException("해당 기숙사가 존재하지 않습니다."));
 
         Optional<CleaningCode> existingCode = cleaningCodeRepository.findByDorm(dorm);
 
@@ -48,4 +48,25 @@ public class CleaningCodeServiceImpl implements  CleaningCodeService {
         session.setAttribute("cleaningCode", checkCode.getCode());
         session.setAttribute("dormCodeForCleaning", dormCode);
     }
+
+    @Override
+    public void updateCleaningCode(String dormCode, String newCleaningCode) {
+        Dorm dorm = dormRepository.findByDormCode(dormCode)
+                .orElseThrow(() -> new IllegalArgumentException("해당 기숙사가 존재하지 않습니다."));
+        CleaningCode cleaningCode = cleaningCodeRepository.findByDorm(dorm)
+                .orElseThrow(() -> new IllegalArgumentException("해당 인증코드가 존재하지 않습니다."));
+        cleaningCode.updateCode(newCleaningCode);
+    }
+
+    @Override
+    public void deleteCleaningCode(String dormCode) {
+        Dorm dorm = dormRepository.findByDormCode(dormCode)
+                .orElseThrow(() -> new IllegalArgumentException("해당 기숙사가 존재하지 않습니다."));
+
+        CleaningCode cleaningCode = cleaningCodeRepository.findByDorm(dorm)
+                .orElseThrow(() -> new IllegalArgumentException("코드가 유효하지 않습니다."));
+
+        cleaningCodeRepository.delete(cleaningCode);
+    }
+
 }
