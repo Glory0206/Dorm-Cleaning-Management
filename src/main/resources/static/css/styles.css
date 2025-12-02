@@ -36,8 +36,10 @@ main {
 .navbar .container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    height: 70px;
+    /* align-items: center; */
+    height: 55px;
+    padding-left: 0%;
+    padding-right: 0%;
 }
 
 .logo {
@@ -67,15 +69,17 @@ main {
 }
 
 .navbar-custom .nav-link {
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: #FF7F2A !important;
     transition: all 0.3s ease;
 }
 
 .navbar-custom .nav-link:hover {
-    color: #ffffff !important;
+    color: #FF5F00 !important;
     transform: translateY(-2px);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
+
+
 
 /* =========================================
    컨테이너 & 페이지 헤더 (Container & Page Header)

@@ -1,40 +1,35 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-
 <nav th:fragment="headerFragment"
      class="navbar navbar-expand-lg navbar-dark bg-orange-color navbar-custom sticky-top shadow-sm">
-    <div class="container">
-        <a class="navbar-brand" th:href="@{/}">
+    
+    <div class="container d-flex flex-column align-items-start py-2">
+
+        <!-- 좌측 상단 제목 -->
+        <a class="navbar-brand mb-2" th:href="@{/}">
             <i class="me-1"></i> 한국기술교육대학교 생활관 관리
         </a>
 
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav align-items-center gap-3">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/rooms}">
-                        <i class="me-1"></i>생활관 상태 확인
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/create-qr}">
-                        <i class="me-1"></i>QR 코드 생성
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/dorm-manager}">
-                        <i class="me-1"></i>생활관 및 호실 관리
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <!-- 가로 네비게이션 메뉴 -->
+        <ul class="nav flex-row">
+            <li class="nav-item me-3">
+                <a class="nav-link text-dark" th:href="@{/rooms}">
+                    생활관 상태 확인
+                </a>
+            </li>
+            <li class="nav-item me-3">
+                <a class="nav-link text-dark" th:href="@{/dorm-manager}">
+                    생활관 및 호실 관리
+                </a>
+            </li>
+            <li class="nav-item me-3">
+                <a class="nav-link text-dark" th:href="@{/create-qr}">
+                    QR 코드 생성
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" th:href="@{/key-manager}">
+                    생활관 인증 코드 생성
+                </a>
+            </li>
+        </ul>
     </div>
 </nav>
-
-</body>
-</html>
