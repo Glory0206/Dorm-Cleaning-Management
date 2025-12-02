@@ -56,7 +56,7 @@
             let cleaningCodes = res.data;
 
             if (Array.isArray(cleaningCodes) && cleaningCodes.length > 0) {
-                currentKey.value = cleaningCodes[0].cleaningCode; // DTO의 code 필드 사용
+                currentKey.value = cleaningCodes[cleaningCodes.length-1].cleaningCode; // DTO의 code 필드 사용
             } else {
                 currentKey.value = "⚠️ 인증코드가 없습니다.";
             }
@@ -75,16 +75,9 @@
         const statusEl = document.getElementById("createKeyStatus");
 
         try {
-            const res = await axios.get('/api/dorms'); // 전체 생활관 조회 API 필요
-            let dorms = res.data;
-
-            for (let i = 0; i < dorms.length; i++) {
-                const dorm = dorms[i];
-                await axios.post("/api/cleaning-code/registration", {
-                    dormCode: dorm.dormCode,
-                    cleaningCode: keyValue
-                });
-            }
+            await axios.post("/api/cleaning-code/registration", {
+                cleaningCode: keyValue
+            });
 
             statusEl.textContent = `✅ 인증코드가 생성되었습니다.`;
             statusEl.style.color = "blue";

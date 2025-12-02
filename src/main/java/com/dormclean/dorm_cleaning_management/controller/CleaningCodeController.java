@@ -22,18 +22,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @RequestMapping("/api/cleaning-code")
 @Tag(name = "청소 인증 코드 API", description = "청소 인증 코드 등록 및 검증 관련 API")
-public class CleaningCodeContrroller {
+public class CleaningCodeController {
     private final CleaningCodeService cleaningCodeService;
     private final CleaningCodeRepository cleaningCodeRepository;
 
     @PostMapping("/registration")
     public void registration(@RequestBody RegistrationCleaningCodeRequestDto dto) {
-        cleaningCodeService.registration(dto.dormCode(), dto.cleaningCode());
+        cleaningCodeService.registration(dto.cleaningCode());
     }
 
     @PostMapping("/use-code")
     public ResponseEntity<String> useCode(@RequestBody CleaningCodeDto dto) {
-        cleaningCodeService.useCleaningCode(dto.cleaningCode(), dto.dormCode());
+        cleaningCodeService.useCleaningCode(dto.cleaningCode());
 
         return ResponseEntity.ok("코드 인증되었습니다.");
     }
@@ -43,7 +43,7 @@ public class CleaningCodeContrroller {
         List<CleaningCode> cleaningCodes = cleaningCodeRepository.findAll();
 
         List<CleaningCodeListResponseDto> dtoList = cleaningCodes.stream()
-                .map(d -> new CleaningCodeListResponseDto(d.getCode()))
+                .map(d -> new CleaningCodeListResponseDto(d.getCleaningCode()))
                 .toList();
 
         return ResponseEntity.ok(dtoList);

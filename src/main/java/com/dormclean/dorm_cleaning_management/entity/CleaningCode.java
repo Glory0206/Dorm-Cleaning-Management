@@ -15,20 +15,15 @@ public class CleaningCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dorm_id", nullable = false, unique = true)
-    private Dorm dorm;
-
     @Column(nullable = false, length = 10)
-    private String code;
+    private String cleaningCode;
 
     @Builder
-    public CleaningCode(Dorm dorm, String code) {
-        this.dorm = dorm;
-        this.code = code;
+    public CleaningCode(String cleaningCode) {
+        this.cleaningCode = cleaningCode;
     }
 
-    public void updateCode(String newCode) {
-        this.code = newCode;
+    public void updateCode(String code) {
+        this.cleaningCode = cleaningCode;
     }
 }

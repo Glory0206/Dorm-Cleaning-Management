@@ -24,9 +24,6 @@ public class Dorm {
     @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Room> rooms = new ArrayList<>();
 
-    @OneToOne(mappedBy = "dorm", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private CleaningCode cleaningCode;
-
     @Builder
     public Dorm(String dormCode, String dormName) {
         this.dormCode = dormCode;
