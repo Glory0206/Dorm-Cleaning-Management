@@ -257,19 +257,26 @@
         // 저장 버튼 클릭 이벤트
         document.getElementById('saveStatusBtn').addEventListener('click', () => {
             const newStatus = document.getElementById('modalRoomStatus').value;
-            if (!selectedRoomNumber) return;
+            const dormCode = dormSelect.value;
+            const floor = floorSelect.value;
+
+            if (!dormCode || !selectedRoomNumber) return;
 
             fetch(`/api/rooms/${selectedRoomNumber}/status`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
+                body: JSON.stringify({ newRoomStatus: newStatus, dormCode: dormCode})
             })
             .then(res => {
                 if (res.ok) {
                     const modalEl = document.getElementById('statusModal');
                     const modal = bootstrap.Modal.getInstance(modalEl);
                     modal.hide();
-                    loadRooms(); // 갱신
+                    // 갱신
+                    if (!floor)
+                        loadRoomsByDorm();
+                    else 
+                        loadRooms();
                 } else {
                     alert('상태 변경 실패');
                 }

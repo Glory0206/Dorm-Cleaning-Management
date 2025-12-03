@@ -8,6 +8,7 @@ import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
 import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.service.RoomService;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 @Tag(name = "호실(방) 관리 API", description = "호실(방) 관련 API")
 public class RoomController {
-
         private final RoomService roomService;
         private final DormRepository dormRepository;
 
@@ -59,16 +59,16 @@ public class RoomController {
         // 호실 생성
         @PostMapping("/rooms/create")
         public ResponseEntity<Long> createRoom(@RequestBody CreateRoomRequestDto dto) {
-                Room room = roomService.createRoom(dto);
+                Room room = roomService.createRoom(dto.dormCode(), dto.floor(), dto.roomNumber());
                 return ResponseEntity.ok(room.getId());
         }
 
         // 호실 상태 변경
-        @PatchMapping("/rooms/{roomId}/status")
+        @PatchMapping("/rooms/{roomNumber}/status")
         public ResponseEntity<Void> updateRoomStatus(
-                        @PathVariable Long roomId,
+                        @PathVariable String roomNumber,
                         @RequestBody RoomStatusUpdateDto dto) {
-                roomService.updateRoomStatus(roomId, dto.roomStatus());
+                roomService.updateRoomStatus(dto.dormCode(), roomNumber, dto.newRoomStatus());
                 return ResponseEntity.ok().build();
         }
 
