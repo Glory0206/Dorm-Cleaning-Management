@@ -18,14 +18,16 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="generatedKey" class="form-label">새로운 인증코드</label>
+                    <div class="col">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="generatedKey" class="form-label">새로운 인증코드</label>
+                            <button type="button" class="btn orange-btn py-0 fw-bold"
+                                    onclick="generateRandomKey()">
+                                인증코드 자동 생성
+                            </button>
+                        </div>
+                    </div>
                     <input type="text" class="form-control form-control-lg" id="generatedKey" placeholder="새로운 인증 코드를 입력해주십시오." required>
-                </div>
-                
-                <div class="mb-3">
-                    <button type="button" class="btn orange-btn w-100 py-3 fw-bold rounded-pill" onclick="generateRandomKey()">
-                        인증코드 자동 생성
-                    </button>
                 </div>
                 
                 <button type="submit" class="btn orange-btn w-100 py-3 fw-bold rounded-pill">
@@ -52,16 +54,16 @@
         currentKey.value = "";
 
         try{
-            const res = await axios.get("/api/cleaning-code/codes");
-            let cleaningCodes = res.data;
+            const res = await axios.get("/api/cleaning-code/get-code");
+            let cleaningCode = res.data.cleaningCode;
 
-            if (Array.isArray(cleaningCodes) && cleaningCodes.length > 0) {
-                currentKey.value = cleaningCodes[cleaningCodes.length-1].cleaningCode; // DTO의 code 필드 사용
+            if (cleaningCode) {
+                currentKey.value = cleaningCode;
             } else {
-                currentKey.value = "⚠️ 인증코드가 없습니다.";
+                currentKey.value = "⚠️ 인증코드가 존재하지 않습니다.";
             }
         } catch (err) {
-            currentKey.value = `⚠️ 인증코드를 불러오지 못했습니다.`;
+            currentKey.value = "⚠️ 인증코드가 존재하지 않습니다.";
         }
     }
     

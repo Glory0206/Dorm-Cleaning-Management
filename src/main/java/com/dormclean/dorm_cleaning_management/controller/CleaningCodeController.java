@@ -1,7 +1,7 @@
 package com.dormclean.dorm_cleaning_management.controller;
 
 import com.dormclean.dorm_cleaning_management.dto.CleaningCodeDto;
-import com.dormclean.dorm_cleaning_management.dto.CleaningCodeListResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.GetCleaningCodeResponseDto;
 import com.dormclean.dorm_cleaning_management.dto.RegistrationCleaningCodeRequestDto;
 import com.dormclean.dorm_cleaning_management.entity.CleaningCode;
 import com.dormclean.dorm_cleaning_management.repository.CleaningCodeRepository;
@@ -38,14 +38,21 @@ public class CleaningCodeController {
         return ResponseEntity.ok("코드 인증되었습니다.");
     }
 
-    @GetMapping("/codes")
-    public ResponseEntity<List<CleaningCodeListResponseDto>> getAllCleaningCode() {
-        List<CleaningCode> cleaningCodes = cleaningCodeRepository.findAll();
+    @GetMapping("/get-code")
+    public ResponseEntity<GetCleaningCodeResponseDto> getAllCleaningCode() {
+        CleaningCode cleaningCode = cleaningCodeRepository.findAll()
+                .stream()
+                .findFirst()
+                .orElse(null);
 
-        List<CleaningCodeListResponseDto> dtoList = cleaningCodes.stream()
-                .map(d -> new CleaningCodeListResponseDto(d.getCleaningCode()))
-                .toList();
+        if (cleaningCode == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        return ResponseEntity.ok(dtoList);
+        GetCleaningCodeResponseDto dto = new GetCleaningCodeResponseDto(
+                cleaningCode.getCleaningCode()
+        );
+
+        return ResponseEntity.ok(dto);
     }
 }
