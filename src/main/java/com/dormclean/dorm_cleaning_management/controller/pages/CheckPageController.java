@@ -3,12 +3,10 @@ package com.dormclean.dorm_cleaning_management.controller.pages;
 import com.dormclean.dorm_cleaning_management.dto.QrResponseDto;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
-import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
 import com.dormclean.dorm_cleaning_management.repository.CleaningCodeRepository;
 import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.repository.RoomRepository;
 import com.dormclean.dorm_cleaning_management.service.QrCodeService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +20,6 @@ public class CheckPageController {
     private final QrCodeService qrCodeService;
     private final DormRepository dormRepository;
     private final RoomRepository roomRepository;
-    private final CleaningCodeRepository cleaningCodeRepository;
 
     @GetMapping("/check")
     public String check(@RequestParam("token") String token, Model model) {

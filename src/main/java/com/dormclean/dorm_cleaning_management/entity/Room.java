@@ -26,7 +26,7 @@ public class Room {
     private String roomNumber;
 
     @Enumerated(EnumType.STRING)
-    private RoomStatus roomStatus = RoomStatus.NOT_USED;
+    private RoomStatus roomStatus = RoomStatus.READY;
 
     private Instant cleanedAt;
     private Instant checkInAt;
@@ -45,7 +45,7 @@ public class Room {
         this.dorm = dorm;
         this.floor = floor;
         this.roomNumber = roomNumber;
-        this.roomStatus = status != null ? status : RoomStatus.NOT_USED;
+        this.roomStatus = status != null ? status : RoomStatus.READY;
         this.cleanedAt = cleanedAt;
         this.checkInAt = checkInAt;
         this.checkOutAt = checkOutAt;
@@ -71,8 +71,8 @@ public class Room {
                 return "OCCUPIED";
             case VACANT_DIRTY:
                 return "VACANT_DIRTY";
-            case VACANT_CLEAN:
-                return "VACANT_CLEAN";
+            case READY:
+                return "READY";
             default:
                 return "";
         }
@@ -80,13 +80,11 @@ public class Room {
 
     public String getStatusLabel() {
         switch (roomStatus) {
-            case NOT_USED:
-                return "공실 (입실 이전)";
             case OCCUPIED:
                 return "재실";
             case VACANT_DIRTY:
                 return "공실 (청소 필요)";
-            case VACANT_CLEAN:
+            case READY:
                 return "공실 (청소 완료)";
             default:
                 return "";
