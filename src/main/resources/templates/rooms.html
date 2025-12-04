@@ -11,15 +11,23 @@
             <p>생활관과 층을 선택하여 호실 상태를 확인하세요.</p>
         </div>
 
+        <!-- 호실 상태 책갈피 -->
+        <div class="status-tabs mb-0">
+            <div class="tab-item active" data-status="">전체</div>
+            <div class="tab-item" data-status="OCCUPIED">재실</div>
+            <div class="tab-item" data-status="VACANT_DIRTY">공실 (청소 필요)</div>
+            <div class="tab-item" data-status="VACANT_CLEAN">공실 (청소 완료)</div>
+        </div>
+
         <!-- 필터 섹션 -->
-        <div class="filter-section d-flex gap-3 mb-4">
+        <div class="filter-section d-flex gap-3 mt-0 mb-4">
             <div class="filter-group flex-fill">
                 <label for="dormSelect" class="form-label">생활관 선택</label>
                     <select class="form-select form-select-lg" id="dormSelect" required>
                     <option value="" selected disabled>생활관을 선택하세요</option>
                     <option th:each="dorm : ${dorms}" 
                             th:value="${dorm.dormCode}"
-                            th:text="${dorm.dormCode} + '동'"></option>
+                            th:text="${dorm.dormCode} + '동(' + ${dorm.dormName} + ')'"></option>
                 </select>
             </div>
 
@@ -120,7 +128,9 @@
 
             if (!dormCode) return;
             
-            loadRooms(); // 갱신
+            // 갱신
+            loadRooms(); 
+            resetStatusTabs();
 
             // // 일괄 선택 기능 표시
             // if (bulkSection.style.display === 'none' || bulkSection.style.display === '') {
@@ -328,7 +338,9 @@
             }
         }
 
+        // 초기 화면
         loadRooms();
+        resetStatusTabs() 
 
         // 모달에서 사용할 정보
         let selectedDormCode = null; 
@@ -364,7 +376,10 @@
                     const modalEl = document.getElementById('statusModal');
                     const modal = bootstrap.Modal.getInstance(modalEl);
                     modal.hide();
-                    loadRooms(); // 갱신
+
+                    // 갱신
+                    loadRooms(); 
+                    resetStatusTabs();
                 } else {
                     alert('상태 변경 실패');
                 }
@@ -474,7 +489,9 @@
                     alert(`오류 발생 (${roomNumber})`);
                 }
             }
+            //갱신
             loadRooms();
+            resetStatusTabs() ;
         }
 
         // 일괄 변경 적용 버튼 
@@ -483,6 +500,52 @@
             document.getElementById('bulkSelectBtn').click();
             selectedRooms = [];
         });
+
+        // 책갈피 상태 필터
+        const statusTabs = document.querySelectorAll('.status-tabs .tab-item');
+
+        statusTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                statusTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const selectedStatus = tab.dataset.status; 
+
+                applyStatusFilter(selectedStatus);
+            });
+        });
+
+        // 상태 필터 적용 함수
+        function applyStatusFilter(status) {
+            const cards = document.querySelectorAll('.room-card');
+
+            cards.forEach(card => {
+                const cardStatus = 
+                    card.classList.contains('occupied') ? "OCCUPIED" :
+                    card.classList.contains('vacant-dirty') ? "VACANT_DIRTY" :
+                    "VACANT_CLEAN";
+
+                if (status === "" || status === cardStatus) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // 상태 기준으로 검색 탭 초기화
+        function resetStatusTabs() {
+            const tabs = document.querySelectorAll('.status-tabs .tab-item');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const allTab = document.querySelector('.status-tabs .tab-item[data-status=""]');
+            if (allTab) {
+                allTab.classList.add('active');
+            }
+        }
+
+
     </script>
 </main>
 
