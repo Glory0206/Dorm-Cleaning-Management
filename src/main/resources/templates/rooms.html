@@ -362,6 +362,7 @@
             }
         });
 
+        // 선택모드에서 호실 선택
         let selectedRooms = []
         function selectRoom(roomNumber) {
             const room = document.querySelector(`.room-card[data-room-number="${roomNumber}"]`);
@@ -380,6 +381,45 @@
                 selectedRooms = selectedRooms.filter(r => r !== roomNumber);
             }
         }
+
+        // 호실 상태 일괄 변경
+        function updateAllSelectedRoom() {
+            const newStatus = document.getElementById('bulkStatusSelect').value;
+            const dormCode = dormSelect.value;
+            const floor = floorSelect.value;
+
+            if (!dormCode || selectedRooms.length < 1) return;
+            
+            selectedRooms.forEach(roomNumber =>{
+                fetch(`/api/rooms/${roomNumber}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ newRoomStatus: newStatus, dormCode: dormCode})
+                })
+                .then(res => {
+                    if (res.ok) {
+                        // 갱신
+                        if (!floor)
+                            loadRoomsByDorm();
+                        else 
+                            loadRooms();
+                    } else {
+                        alert(`${roomNumber}호 상태 변경 실패`);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('오류 발생');
+                });
+            });
+        }
+
+        // 일괄 변경 적용 버튼 
+        document.getElementById('applyBulkBtn').addEventListener('click', () => {
+            updateAllSelectedRoom();
+            document.getElementById('bulkSelectBtn').click();
+            selectedRooms = [];
+        });
     </script>
 </main>
 
