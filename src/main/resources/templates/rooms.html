@@ -155,6 +155,15 @@
                         const div = document.createElement('div');
                         div.classList.add('room-card', 'col-2', 'mb-3', 'p-2');
 
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.classList.add('room-checkbox');
+                        checkbox.style.display = 'none';
+                        checkbox.style.transform = 'scale(0.3)';
+                        checkbox.style.margin = '0px';
+                        checkbox.style.padding = '0px';
+                        div.appendChild(checkbox);
+
                         // 상태별 색상 적용
                         if (room.status === 'OCCUPIED') div.classList.add('occupied');
                         else if (room.status === 'VACANT_DIRTY') div.classList.add('vacant-dirty');
@@ -243,14 +252,29 @@
                 const roomGrid = document.createElement('div');
                 roomGrid.classList.add('room-grid', 'row');
                 rooms.forEach(room => {
+
                     const div = document.createElement('div');
                     div.classList.add('room-card', 'col-2', 'mb-3', 'p-2');
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.classList.add('room-checkbox');
+                    checkbox.style.display = 'none';
+                    checkbox.style.transform = 'scale(0.3)';
+                    checkbox.style.margin = '0px';
+                    checkbox.style.padding = '0px';
+                    div.appendChild(checkbox);
 
                     if (room.status === 'OCCUPIED') div.classList.add('occupied');
                     else if (room.status === 'VACANT_DIRTY') div.classList.add('vacant-dirty');
                     else div.classList.add('vacant-clean');
 
-                    div.onclick = () => openStatusModal(room.roomNumber, room.status);
+                    div.onclick = () => {
+                        if (bulkMode == false)
+                            openStatusModal(room.roomNumber, room.status);
+                        // else 
+
+                    };
 
                     div.innerHTML = `
                         <div class="room-number fw-bold">${room.roomNumber}</div>
@@ -310,103 +334,46 @@
                 alert('오류 발생');
             });
         });
-        // ============= 일괄 선택 모드 관련 변수 =============
+        
         let bulkMode = false;
-        let selectedRooms = new Set();
+        document.getElementById('bulkSelectBtn').addEventListener('click', () =>{
+            if (bulkMode == false)
+            {
+                bulkMode = true;
 
+                const cards = document.querySelectorAll('.room-card');
 
-        // ============= 선택 모드 토글 버튼 =============
-        document.getElementById('bulkSelectToggle').addEventListener('click', () => {
-            bulkMode = !bulkMode;
+                cards.forEach(card =>{
+                    const bulkSelectBtn = document.getElementById('bulkSelectBtn');
+                    const checkbox = card.querySelector('.room-checkbox');
 
-            const cards = document.querySelectorAll('.room-card');
-
-            if (bulkMode) {
-                // 선택 모드 ON
-                cards.forEach(c => c.classList.add('select-mode'));
-
-                selectedRooms.clear(); // 기존 선택 초기화
-                document.getElementById('bulkSelectToggle').textContent = '선택 해제';
-            } else {
-                // 선택 모드 OFF
-                cards.forEach(c => {
-                    c.classList.remove('select-mode');
-                    c.classList.remove('selected');
+                    card.classList.add('select-mode');
+                    if (checkbox)
+                        checkbox.style.display = 'block';
                 });
-
-                selectedRooms.clear();
-                document.getElementById('bulkSelectToggle').textContent = '선택';
+                bulkSelectBtn.classList.remove('btn-primary');
+                bulkSelectBtn.classList.add('btn-secondary');
+                bulkSelectBtn.textContent = '해제';
             }
-        });
-
-        // ============= 호실 클릭 시 선택 처리 =============
-        document.addEventListener('click', (e) => {
-            const target = e.target.closest('.room-card');
-            if (!target || !bulkMode) return;
-
-            const roomNumber = target.querySelector('.room-number').textContent;
-
-            if (selectedRooms.has(roomNumber)) {
-                // 선택 해제
-                selectedRooms.delete(roomNumber);
-                target.classList.remove('selected');
-            } else {
-                // 선택
-                selectedRooms.add(roomNumber);
-                target.classList.add('selected');
-            }
-        });
-
-
-        // ============= 일괄 적용 버튼 =============
-        document.getElementById('bulkApplyBtn').addEventListener('click', async () => {
-            if (!bulkMode || selectedRooms.size === 0) {
-                alert('선택된 호실이 없습니다.');
-                return;
-            }
-
-            const dormCode = dormSelect.value;
-            const newStatus = document.getElementById('bulkStatusSelect').value;
-
-            if (!dormCode) {
-                alert('생활관을 먼저 선택하세요.');
-                return;
-            }
-
-            // 일괄 PATCH 요청
-            const promises = [];
-            selectedRooms.forEach(roomNumber => {
-                promises.push(
-                    fetch(`/api/rooms/${roomNumber}/status`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ newRoomStatus: newStatus, dormCode: dormCode })
-                    })
-                );
-            });
-
-            await Promise.all(promises);
-
-            alert('상태가 성공적으로 변경되었습니다.');
-
-            // 선택 모드 종료
-            bulkMode = false;
-            selectedRooms.clear();
-            document.getElementById('bulkSelectToggle').textContent = '선택';
-
-            // 카드 스타일 복원
-            const cards = document.querySelectorAll('.room-card');
-            cards.forEach(c => {
-                c.classList.remove('select-mode');
-                c.classList.remove('selected');
-            });
-
-            // 화면 새로고침 (현재 층 or 전체)
-            const floor = floorSelect.value;
-            if (!floor)
-                loadRoomsByDorm();
             else
-                loadRooms();
+            {
+                bulkMode = false;
+
+                const cards = document.querySelectorAll('.room-card');
+
+                cards.forEach(card =>{
+                    const bulkSelectBtn = document.getElementById('bulkSelectBtn');
+                    const checkbox = card.querySelector('.room-checkbox');
+
+                    card.classList.remove('select-mode');
+                    if (checkbox)
+                        checkbox.style.display = 'none';
+                });
+                bulkSelectBtn.classList.remove('btn-secondary');
+                bulkSelectBtn.classList.add('btn-primary');
+                bulkSelectBtn.textContent = '선택';
+
+            }
         });
     </script>
 </main>
