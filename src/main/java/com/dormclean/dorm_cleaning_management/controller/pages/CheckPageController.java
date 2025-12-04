@@ -4,9 +4,11 @@ import com.dormclean.dorm_cleaning_management.dto.QrResponseDto;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
 import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
+import com.dormclean.dorm_cleaning_management.repository.CleaningCodeRepository;
 import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.repository.RoomRepository;
 import com.dormclean.dorm_cleaning_management.service.QrCodeService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ public class CheckPageController {
     private final QrCodeService qrCodeService;
     private final DormRepository dormRepository;
     private final RoomRepository roomRepository;
+    private final CleaningCodeRepository cleaningCodeRepository;
 
     @GetMapping("/check")
     public String check(@RequestParam("token") String token, Model model) {
@@ -29,18 +32,11 @@ public class CheckPageController {
         Dorm dorm = dormRepository.findByDormCode(data.dormCode()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
         Room room = roomRepository.findByDormAndRoomNumber(dorm, data.roomNumber()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 호실입니다."));
 
-        boolean isNotUsed = room.getRoomStatus() == RoomStatus.NOT_USED;
-        boolean isOccupied = room.getRoomStatus() == RoomStatus.OCCUPIED;
-        boolean isVacantDirty = room.getRoomStatus() == RoomStatus.VACANT_DIRTY;
-
         // HTML(뷰)에 데이터 전달
         model.addAttribute("dormName", dorm.getDormName());
         model.addAttribute("dormCode", dorm.getDormCode());
         model.addAttribute("roomNumber", room.getRoomNumber());
-
-        model.addAttribute("isNotUsed", isNotUsed);
-        model.addAttribute("isOccupied", isOccupied);
-        model.addAttribute("isVacantDirty", isVacantDirty);
+        model.addAttribute("status", room.getRoomStatus().name());
 
         // check.html 파일을 보여줌
         return "check";
