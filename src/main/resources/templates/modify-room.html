@@ -38,10 +38,6 @@
                     <h4 class="mb-3">호실 추가</h4>
                     <form id="createRoomForm">
                         <div class="mb-3">
-                            <label for="floor" class="form-label">층</label>
-                            <input type="number" class="form-control" id="floor" value="1" min="1" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="roomNumber" class="form-label">호실 번호</label>
                             <input type="text" class="form-control" id="roomNumber" required>
                         </div>
@@ -60,7 +56,7 @@
                     <form id="deleteRoomForm">
                         <div class="mb-3">
                             <label for="deleteRoomNumber" class="form-label">삭제할 호실 번호</label>
-                            <input type="number" class="form-control" id="deleteRoomNumber" required>
+                            <input type="text" class="form-control" id="deleteRoomNumber" required>
                         </div>
                         <div class="form-bottom mt-auto">
                             <button type="submit" class="btn btn-primary">호실 삭제</button>
@@ -93,7 +89,6 @@
 
         // 조회 버튼 클릭 시 호실 정보 갱신
         async function loadRooms() {
-            const dormCode = dormSelect.value;
 
             if (!dormCode) return;
 
@@ -148,7 +143,6 @@
         document.getElementById('createRoomForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const dormCode = dormSelect.value;
-            const floor = parseInt(document.getElementById('floor').value);
             const roomNumber = document.getElementById('roomNumber').value;
             const statusEl = document.getElementById('roomStatus');
             
@@ -162,7 +156,6 @@
             try {
                 const res = await axios.post('/api/rooms/create', {
                     dormCode: dormCode,
-                    floor: floor,
                     roomNumber: roomNumber
                 });
                 statusEl.textContent = `✅ ${roomNumber}호가 추가되었습니다.`;
