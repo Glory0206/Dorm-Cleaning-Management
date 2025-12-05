@@ -196,8 +196,10 @@
                 th:disabled="${status != 'VACANT_DIRTY'}">
 
             <span th:if="${status == 'VACANT_DIRTY'}">✨ 청소 완료</span>
-            <span th:if="${status == 'READY'}">청소 완료됨</span>
-            <span th:if="${status == 'READY' or status == 'OCCUPIED'}">청소 대상 아님</span>
+
+            <span th:if="${status == 'READY'}">청결한 상태</span>
+
+            <span th:unless="${status == 'VACANT_DIRTY' or status == 'READY'}">재실 중</span>
 
         </button>
     </div>
