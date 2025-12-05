@@ -191,15 +191,15 @@
 
         <button class="btn btn-clean"
                 th:if="${session.cleaningCode != null}"
-                th:classappend="${status != 'VACANT_DIRTY'} ? 'btn-disabled'"
-                th:onclick="${status == 'VACANT_DIRTY'} ? 'sendRequest(\'clean\')' : 'return false;'"
-                th:disabled="${status != 'VACANT_DIRTY'}">
+                th:classappend="${status != 'VACANT'} ? 'btn-disabled'"
+                th:onclick="${status == 'VACANT'} ? 'sendRequest(\'clean\')' : 'return false;'"
+                th:disabled="${status != 'VACANT'}">
 
-            <span th:if="${status == 'VACANT_DIRTY'}">✨ 청소 완료</span>
+            <span th:if="${status == 'VACANT'}">✨ 청소 완료</span>
 
             <span th:if="${status == 'READY'}">청결한 상태</span>
 
-            <span th:unless="${status == 'VACANT_DIRTY' or status == 'READY'}">재실 중</span>
+            <span th:unless="${status == 'VACANT' or status == 'READY'}">재실 중</span>
 
         </button>
     </div>

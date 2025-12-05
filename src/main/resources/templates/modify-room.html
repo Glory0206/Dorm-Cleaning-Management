@@ -123,8 +123,8 @@
                     // 상태별 배경색 클래스 설정
                     let statusClass = '';
                     if (room.status === 'OCCUPIED') statusClass = 'occupied';
-                    else if (room.status === 'VACANT_DIRTY') statusClass = 'vacant-dirty';
-                    else statusClass = 'vacant-clean';
+                    else if (room.status === 'VACANT') statusClass = 'vacant';
+                    else statusClass = 'clean';
 
                     row.classList.add('room-row', statusClass);
 
