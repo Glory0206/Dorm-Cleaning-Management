@@ -485,3 +485,23 @@ main {
     background: #FFB366;
     color: white;
 }
+
+.room-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.room-cell {
+    width: 10%; /* 10개이므로 10%씩 */
+    padding: 6px;
+    text-align: center;
+}
+
+.floor-separator {
+    border-bottom: 1px solid #e2e2e2;
+    padding: 4px 0;        /* 층 사이 여백 */
+}
+
+.floor-separator td {
+    border-bottom: 2px solid #ccc; /* 구분선 */
+}
