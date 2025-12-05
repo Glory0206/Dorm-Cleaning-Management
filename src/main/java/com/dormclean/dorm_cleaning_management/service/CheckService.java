@@ -5,6 +5,6 @@ import com.dormclean.dorm_cleaning_management.entity.Dorm;
 
 public interface CheckService {
     public void checkIn(CheckRequestDto dto);
-    public void checkOut(Dorm dorm, String roomNumber);
-    public void cleanCheck(Dorm dorm, String roomNumber);
+    public void checkOut(CheckRequestDto dto);
+    public void cleanCheck(CheckRequestDto dto);
 }

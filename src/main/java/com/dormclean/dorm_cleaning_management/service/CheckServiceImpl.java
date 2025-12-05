@@ -31,8 +31,10 @@ public class CheckServiceImpl implements CheckService {
     }
 
     @Override
-    public void checkOut(Dorm dorm, String roomNumber) {
-        Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
+    public void checkOut(CheckRequestDto dto) {
+        Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
+        Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new IllegalArgumentException("해당 호실이 존재하지 않습니다."));
 
         if (room.getRoomStatus() == RoomStatus.OCCUPIED) {
@@ -42,8 +44,10 @@ public class CheckServiceImpl implements CheckService {
     }
 
     @Override
-    public void cleanCheck(Dorm dorm, String roomNumber) {
-        Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
+    public void cleanCheck(CheckRequestDto dto) {
+        Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
+        Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new IllegalArgumentException("해당 호실이 존재하지 않습니다."));
 
         if (room.getRoomStatus() == RoomStatus.VACANT) {
