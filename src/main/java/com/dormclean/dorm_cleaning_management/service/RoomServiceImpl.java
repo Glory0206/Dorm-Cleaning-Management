@@ -60,7 +60,7 @@ public class RoomServiceImpl implements RoomService {
         else if (newRoomStatus.equals("READY"))
             room.updateStatus(RoomStatus.READY);
         else
-            room.updateStatus(RoomStatus.VACANT_DIRTY);
+            room.updateStatus(RoomStatus.VACANT);
     }
 
     // 호실 삭제

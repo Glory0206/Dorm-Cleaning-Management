@@ -8,7 +8,7 @@ import java.time.Instant;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "room", uniqueConstraints = {@UniqueConstraint(columnNames = {"dorm_id", "room_number"})})
+@Table(name = "room", uniqueConstraints = { @UniqueConstraint(columnNames = { "dorm_id", "room_number" }) })
 public class Room {
 
     @Id
@@ -58,8 +58,14 @@ public class Room {
     public void updateCleanedAt(Instant cleanedAt) {
         this.cleanedAt = cleanedAt;
     }
-    public void updateCheckInAt(Instant checkInAt) { this.checkInAt = checkInAt;}
-    public void updateCheckOutAt(Instant checkOutAt) { this.checkOutAt = checkOutAt;}
+
+    public void updateCheckInAt(Instant checkInAt) {
+        this.checkInAt = checkInAt;
+    }
+
+    public void updateCheckOutAt(Instant checkOutAt) {
+        this.checkOutAt = checkOutAt;
+    }
 
     public void assignQrCode(QrCode qrCode) {
         this.qrCode = qrCode;
@@ -69,8 +75,8 @@ public class Room {
         switch (roomStatus) {
             case OCCUPIED:
                 return "OCCUPIED";
-            case VACANT_DIRTY:
-                return "VACANT_DIRTY";
+            case VACANT:
+                return "VACANT";
             case READY:
                 return "READY";
             default:
@@ -82,7 +88,7 @@ public class Room {
         switch (roomStatus) {
             case OCCUPIED:
                 return "재실";
-            case VACANT_DIRTY:
+            case VACANT:
                 return "공실 (청소 필요)";
             case READY:
                 return "공실 (청소 완료)";
