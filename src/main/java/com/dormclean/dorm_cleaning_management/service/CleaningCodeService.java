@@ -1,7 +1,13 @@
 package com.dormclean.dorm_cleaning_management.service;
 
-public interface CleaningCodeService {
-    public void registration(String cleaningCode);
+import com.dormclean.dorm_cleaning_management.dto.CleaningCodeDto;
+import com.dormclean.dorm_cleaning_management.dto.GetCleaningCodeResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.RegistrationCleaningCodeRequestDto;
 
-    public void useCleaningCode(String cleaningCode);
+public interface CleaningCodeService {
+    public void registration(RegistrationCleaningCodeRequestDto dto);
+
+    public void useCleaningCode(CleaningCodeDto dto);
+
+    public GetCleaningCodeResponseDto getCleaningCode();
 }

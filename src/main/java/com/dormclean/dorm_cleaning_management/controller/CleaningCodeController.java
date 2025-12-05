@@ -28,30 +28,23 @@ public class CleaningCodeController {
 
     @PostMapping("/registration")
     public void registration(@RequestBody RegistrationCleaningCodeRequestDto dto) {
-        cleaningCodeService.registration(dto.cleaningCode());
+        cleaningCodeService.registration(dto);
     }
 
     @PostMapping("/use-code")
     public ResponseEntity<String> useCode(@RequestBody CleaningCodeDto dto) {
-        cleaningCodeService.useCleaningCode(dto.cleaningCode());
+        cleaningCodeService.useCleaningCode(dto);
 
         return ResponseEntity.ok("코드 인증되었습니다.");
     }
 
     @GetMapping("/get-code")
     public ResponseEntity<GetCleaningCodeResponseDto> getAllCleaningCode() {
-        CleaningCode cleaningCode = cleaningCodeRepository.findAll()
-                .stream()
-                .findFirst()
-                .orElse(null);
+        GetCleaningCodeResponseDto dto = cleaningCodeService.getCleaningCode();
 
-        if (cleaningCode == null) {
+        if (dto == null) {
             return ResponseEntity.notFound().build();
         }
-
-        GetCleaningCodeResponseDto dto = new GetCleaningCodeResponseDto(
-                cleaningCode.getCleaningCode()
-        );
 
         return ResponseEntity.ok(dto);
     }
