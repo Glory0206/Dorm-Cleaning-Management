@@ -61,7 +61,17 @@ public class RoomController {
         // 호실 생성
         @PostMapping("/rooms/create")
         public ResponseEntity<Long> createRoom(@RequestBody CreateRoomRequestDto dto) {
-                Room room = roomService.createRoom(dto.dormCode(), dto.floor(), dto.roomNumber());
+                String s = dto.roomNumber();
+                int cnt = 0, idx = s.length() - 1;
+                while (idx >= 0) {
+                        char c = s.charAt(idx);
+                        if (c >= '0' && c <= '9')
+                                break;
+                        cnt++;
+                        idx--;
+                }
+                Integer floor = Integer.parseInt(s.substring(0, s.length() - (cnt + 2)));
+                Room room = roomService.createRoom(dto.dormCode(), floor, dto.roomNumber());
                 return ResponseEntity.ok(room.getId());
         }
 
