@@ -5,7 +5,7 @@ import com.dormclean.dorm_cleaning_management.dto.DormDeleteRequestDto;
 import com.dormclean.dorm_cleaning_management.dto.DormListResponseDto;
 import com.dormclean.dorm_cleaning_management.dto.DormUpdateRequestDto;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
-import com.dormclean.dorm_cleaning_management.service.DormServiceImpl;
+import com.dormclean.dorm_cleaning_management.service.DormService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Tag(name = "기숙사 건물 관리 API", description = "기숙사 관련 API")
 public class DormController {
 
-    private final DormServiceImpl dormService;
+    private final DormService dormService;
 
     // 기숙사 리스트 반환
     @GetMapping("/dorms")

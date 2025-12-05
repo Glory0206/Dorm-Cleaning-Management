@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DormServiceImpl implements  DormService {
+public class DormServiceImpl implements DormService {
 
     private final DormRepository dormRepository;
 
