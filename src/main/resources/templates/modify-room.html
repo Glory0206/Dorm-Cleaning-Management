@@ -132,7 +132,8 @@
 
                         Object.keys(floors).sort().forEach(floor => {
                             let row = document.createElement('tr');
-                            floors[floor].forEach((room, index) => {
+                            floors[floor].sort((a, b) => Number(a.roomNumber) - Number(b.roomNumber))
+                            .forEach((room, index) => {
 
                                 // td 생성
                                 const td = document.createElement('td');
@@ -144,7 +145,7 @@
                                 row.appendChild(td);
 
                                 // 10개마다 줄바꿈
-                                if ((index + 1) % 10 === 0) {
+                                if ((index + 1) % 5 === 0) {
                                     table.appendChild(row);
                                     row = document.createElement('tr');
                                 }
@@ -154,7 +155,14 @@
                             if (row.children.length > 0) {
                                 table.appendChild(row);
                             }
-                            table.appendChild(document.createElement('tr'));
+                            
+                            //구분선
+                            const seperator = document.createElement('tr');
+                            const sepCell = document.createElement('td');
+                            sepCell.colSpan = 5;
+                            sepCell.classList.add('floor-separator');
+                            seperator.appendChild(sepCell);
+                            table.appendChild(seperator);
                         });
                         floorDiv.appendChild(table);
                     }
@@ -189,6 +197,7 @@
                 statusEl.textContent = `✅ ${roomNumber}호가 추가되었습니다.`;
                 statusEl.style.color = 'blue';
                 e.target.reset();
+                loadRooms(); // 갱신
             } catch (err) {
                 const message = err.response.data.message;
                 statusEl.textContent = `⚠️ ${roomNumber}호 추가 실패: ${message}`;
@@ -220,6 +229,7 @@
                 statusEl.textContent = `✅ ${roomNumber}호가 삭제되었습니다.`;
                 statusEl.style.color = 'blue';
                 e.target.reset();
+                loadRooms(); // 갱신
             } catch (err) {
                 statusEl.textContent = `⚠️ ${roomNumber}호 삭제에 실패하였습니다.`;
                 statusEl.style.color = 'red';
