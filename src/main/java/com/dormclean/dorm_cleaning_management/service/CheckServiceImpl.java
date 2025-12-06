@@ -1,8 +1,10 @@
 package com.dormclean.dorm_cleaning_management.service;
 
+import com.dormclean.dorm_cleaning_management.dto.CheckRequestDto;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
 import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
+import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.repository.RoomRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -14,10 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CheckServiceImpl implements CheckService {
     private final RoomRepository roomRepository;
+    private final DormRepository dormRepository;
 
     @Override
-    public void checkIn(Dorm dorm, String roomNumber) {
-        Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
+    public void checkIn(CheckRequestDto dto) {
+        Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
+        Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new IllegalArgumentException("해당 호실이 존재하지 않습니다."));
         if (room.getRoomStatus() == RoomStatus.READY) {
             room.updateStatus(RoomStatus.OCCUPIED); // 재실
@@ -28,8 +33,10 @@ public class CheckServiceImpl implements CheckService {
     }
 
     @Override
-    public void checkOut(Dorm dorm, String roomNumber) {
-        Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
+    public void checkOut(CheckRequestDto dto) {
+        Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
+        Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new IllegalArgumentException("해당 호실이 존재하지 않습니다."));
 
         if (room.getRoomStatus() == RoomStatus.OCCUPIED) {
@@ -39,8 +46,10 @@ public class CheckServiceImpl implements CheckService {
     }
 
     @Override
-    public void cleanCheck(Dorm dorm, String roomNumber) {
-        Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
+    public void cleanCheck(CheckRequestDto dto) {
+        Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
+        Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new IllegalArgumentException("해당 호실이 존재하지 않습니다."));
 
         if (room.getRoomStatus() == RoomStatus.VACANT) {
