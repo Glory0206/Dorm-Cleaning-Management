@@ -18,6 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @RequiredArgsConstructor
@@ -71,6 +74,37 @@ public class QrCodeServiceImpl implements QrCodeService {
             e.printStackTrace();
             throw new RuntimeException("QR 코드 생성 중 오류 발생", e);
         }
+    }
+
+    @Override
+    @Transactional
+    public byte[] generateZipForDorms(List<String> dormCodes) {
+        ByteArrayOutputStream zipOutputStream = new ByteArrayOutputStream();
+
+        try(ZipOutputStream zip = new ZipOutputStream(zipOutputStream)){
+            for(String dormCode: dormCodes){
+                Dorm dorm = dormRepository.findByDormCode(dormCode)
+                        .orElseThrow(() -> new IllegalArgumentException("기숙사의 정보를 찾을 수 없습니다."));
+
+                List<Room> rooms = roomRepository.findByDorm(dorm);
+
+                String dormFolder = dormCode + "/";
+
+                for(Room room: rooms){
+                    QrRequestDto dto = new QrRequestDto(dormCode, room.getRoomNumber());
+                    byte[] qrImages = createSecureQr(dto);
+
+                    ZipEntry entry = new ZipEntry(dormFolder + room.getRoomNumber() + "호.png");
+                    zip.putNextEntry(entry);
+                    zip.write(qrImages);
+                    zip.closeEntry();
+                }
+            }
+        } catch(Exception e){
+            throw new RuntimeException("다중 생활관 QR ZIP 생성 중 오류 발생", e);
+        }
+
+        return zipOutputStream.toByteArray();
     }
 
     @Override

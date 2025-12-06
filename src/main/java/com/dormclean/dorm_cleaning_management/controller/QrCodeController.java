@@ -4,12 +4,12 @@ import com.dormclean.dorm_cleaning_management.dto.QrRequestDto;
 import com.dormclean.dorm_cleaning_management.service.QrCodeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/qr")
@@ -31,5 +31,16 @@ public class QrCodeController {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
+    }
+
+    @GetMapping("generate/zip")
+    public ResponseEntity<byte[]> generateQrCodeZip(@RequestParam List<String> dormCodes) {
+        byte[] zipFile = qrCodeService.generateZipForDorms(dormCodes);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=dorm_qr_codes.zip")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(zipFile);
     }
 }
