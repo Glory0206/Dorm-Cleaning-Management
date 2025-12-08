@@ -390,15 +390,17 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ newRoomStatus: newStatus, dormCode: selectedDormCode})
             })
-            .then(res => {
+            .then(async (res) => {
                 if (res.ok) {
                     const modalEl = document.getElementById('statusModal');
                     const modal = bootstrap.Modal.getInstance(modalEl);
                     modal.hide();
 
                     // 갱신
-                    loadRooms(); 
-                    resetStatusTabs();
+                    floorDiv.style.visibility = 'hidden';
+                    await loadRooms(); 
+                    applyStatusFilter(selectedStatus);
+                    floorDiv.style.visibility = 'visible';
                 } else {
                     alert('상태 변경 실패');
                 }
@@ -509,8 +511,10 @@
                 }
             }
             //갱신
-            loadRooms();
-            resetStatusTabs() ;
+            floorDiv.style.visibility = 'hidden';
+            await loadRooms();
+            applyStatusFilter(selectedStatus);
+            floorDiv.style.visibility = 'visible';
         }
 
         // 일괄 변경 적용 버튼 
@@ -528,15 +532,28 @@
                 statusTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
 
-                const selectedStatus = tab.dataset.status; 
+                selectedStatus = tab.dataset.status; 
 
                 applyStatusFilter(selectedStatus);
             });
         });
 
         // 상태 필터 적용 함수
+        let selectedStatus = "";
         function applyStatusFilter(status) {
-            const cards = document.querySelectorAll('.room-card');
+            const cards = Array.from(document.querySelectorAll('.room-card'));
+
+            // cards 배열을 dataset.roomNumber 기준으로 정렬
+            cards.sort((a, b) => {
+                const A = parseRoomNumber(a.dataset.roomNumber);
+                const B = parseRoomNumber(b.dataset.roomNumber);
+
+                // 1) 숫자 비교
+                if (A.num !== B.num) return A.num - B.num;
+
+                // 2) 알파벳 비교
+                return A.suffix.localeCompare(B.suffix);
+            });
 
             cards.forEach(card => {
                 const cardStatus = 
@@ -553,6 +570,7 @@
         }
 
         // 상태 기준으로 검색 탭 초기화
+        
         function resetStatusTabs() {
             const tabs = document.querySelectorAll('.status-tabs .tab-item');
 
