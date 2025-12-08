@@ -59,7 +59,7 @@
                                 <input type="text" class="form-control" id="roomNumber" required>
                             </div>
                             <div class="form-bottom mt-auto">
-                                <button type="submit" class="btn btn-primary">호실 추가하기</button>
+                                <button type="submit" class="btn btn-primary">호실 추가</button>
                                 <p id="roomStatus" class="status-msg text-muted">호실을 추가하려면 세부 정보를 입력하십시오.</p>
                             </div>    
                         </form>
@@ -88,12 +88,25 @@
                 <div class="col-md-6">
                     <div class="card p-4 h-100">
                         <h4 class="mb-3">호실 일괄 추가</h4>
-                        <form id="createAllRoomForm">
-                            <div class="form-bottom mt-auto">
-                                <button type="submit" class="btn btn-primary">호실 추가하기</button>
-                                <p id="allRoomStatus" class="status-msg text-muted">호실을 추가하려면 세부 정보를 입력하십시오.</p>
-                            </div>    
-                        </form>
+                        <div class="form-bottom mt-auto">
+
+                            <!-- 파일 업로드 -->
+                            <input type="file" id="roomExcelFile" accept=".xlsx, .xls" class="form-control mb-3">
+                            
+                            <!-- 양식 다운로드 -->
+                            <button class="btn btn-secondary mb-3" onclick="downloadExcelTemplate()">
+                                양식 받기
+                            </button>
+
+                            <!-- 등록 버튼 -->
+                            <button class="btn btn-primary mb-3" onclick="uploadExcelRooms()">
+                                일괄 등록
+                            </button>
+
+                            <p id="allRoomStatus" class="status-msg text-muted mt-2">
+                                엑셀 파일을 업로드하여 호실을 등록하십시오.
+                            </p>                            
+                        </div>
                     </div>
                 </div>
 
@@ -102,8 +115,8 @@
                     <div class="card p-4 h-100">
                         <h4 class="mb-3">호실 일괄 삭제</h4>
                         <form id="deleteAllRoomForm">
-                            <div class="form-bottom mt-auto">
-                                <button type="submit" class="btn btn-primary">호실 일괄 삭제</button>
+                            <div class="form-bottom mb-3">
+                                <button type="submit" class="btn btn-primary">일괄 삭제</button>
                                 <p id="deleteAllRoomStatus" class="status-msg text-muted">호실을 일괄 삭제합니다.</p>
                             </div>
                         </form>
@@ -305,6 +318,41 @@
             loadRooms(); // 갱신
         } catch (err) {
             statusEl.textContent = `⚠️ ${roomNumber}호 삭제에 실패하였습니다.`;
+            statusEl.style.color = 'red';
+        }
+    });
+
+    // 호실 등록 양식 다운로드
+    function downloadExcelTemplate() {
+        window.location.href = '/api/Excel/download';
+    }
+
+    // 호실 일괄 등록
+    document.getElementById('registerRoomForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const dormCode = dormSelect.value;
+        const roomNumber = document.getElementById('roomNumber').value;
+        const statusEl = document.getElementById('roomStatus');
+        
+
+        if (!dormCode) {
+            statusEl.textContent = '⚠️ 생활관을 먼저 선택하세요.';
+            statusEl.style.color = 'red';
+            return;
+        }
+
+        try {
+            const res = await axios.post('/api/rooms/create', {
+                dormCode: dormCode,
+                roomNumber: roomNumber
+            });
+            statusEl.textContent = `✅ ${roomNumber}호가 추가되었습니다.`;
+            statusEl.style.color = 'blue';
+            e.target.reset();
+            loadRooms(); // 갱신
+        } catch (err) {
+            const message = err.response.data.message;
+            statusEl.textContent = `⚠️ ${roomNumber}호 추가 실패: ${message}`;
             statusEl.style.color = 'red';
         }
     });
