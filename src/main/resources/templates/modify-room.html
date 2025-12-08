@@ -134,67 +134,62 @@
             emptyState.style.display = 'none';
 
             try {
-                    const res = await fetch("/api/dorms");
-                    const dorms = await res.json();
-
                     floorDiv.innerHTML = ``;
                     floorDiv.style.marginTop = "1rem";
 
-                    for (const dorm of dorms) 
-                    {
-                        const roomRes = await fetch(`/api/rooms/info/byDorm?dormCode=${dorm.dormCode}`);
-                        const rooms = await roomRes.json();
+                    const dormCode = dormSelect.value;
 
-                        const table = document.createElement('table');
-                        table.classList.add('room-table');
+                    const roomRes = await fetch(`/api/rooms/info/byDorm?dormCode=${dormCode}`);
+                    const rooms = await roomRes.json();
 
-                        // rooms 배열을 층별로 그룹핑
-                        const floors = {};
+                    const table = document.createElement('table');
+                    table.classList.add('room-table');
 
-                        rooms.forEach(room => {
-                            const floor = room.floor;    // 1, 2, 3 같은 층 정보
-                            if (!floors[floor]) floors[floor] = [];
-                            floors[floor].push(room);
-                        });
+                    // rooms 배열을 층별로 그룹핑
+                    const floors = {};
 
-                        Object.keys(floors).sort().forEach(floor => {
-                            let row = document.createElement('tr');
-                            
-                            const sortedRooms = sortRooms(floors[floor]);
-                            sortedRooms.forEach((room, index) => {
+                    rooms.forEach(room => {
+                        const floor = room.floor;    // 1, 2, 3 같은 층 정보
+                        if (!floors[floor]) floors[floor] = [];
+                        floors[floor].push(room);
+                    });
 
-                                // td 생성
-                                const td = document.createElement('td');
-                                td.classList.add('room-cell');
-                                td.innerHTML = `
-                                    <div class="room-number fw-bold">${room.roomNumber}</div>
-                                `;
+                    Object.keys(floors).sort().forEach(floor => {
+                        let row = document.createElement('tr');
+                        
+                        const sortedRooms = sortRooms(floors[floor]);
+                        sortedRooms.forEach((room, index) => {
 
-                                row.appendChild(td);
+                            // td 생성
+                            const td = document.createElement('td');
+                            td.classList.add('room-cell');
+                            td.innerHTML = `
+                                <div class="room-number fw-bold">${room.roomNumber}</div>
+                            `;
 
-                                // 10개마다 줄바꿈
-                                if ((index + 1) % 5 === 0) {
-                                    table.appendChild(row);
-                                    row = document.createElement('tr');
-                                }
-                            });
+                            row.appendChild(td);
 
-                            // 남은 셀 추가
-                            if (row.children.length > 0) {
+                            // 10개마다 줄바꿈
+                            if ((index + 1) % 5 === 0) {
                                 table.appendChild(row);
+                                row = document.createElement('tr');
                             }
-                            
-                            //구분선
-                            const seperator = document.createElement('tr');
-                            const sepCell = document.createElement('td');
-                            sepCell.colSpan = 5;
-                            sepCell.classList.add('floor-separator');
-                            seperator.appendChild(sepCell);
-                            table.appendChild(seperator);
                         });
-                        floorDiv.appendChild(table);
-                    }
 
+                        // 남은 셀 추가
+                        if (row.children.length > 0) {
+                            table.appendChild(row);
+                        }
+                        
+                        //구분선
+                        const seperator = document.createElement('tr');
+                        const sepCell = document.createElement('td');
+                        sepCell.colSpan = 5;
+                        sepCell.classList.add('floor-separator');
+                        seperator.appendChild(sepCell);
+                        table.appendChild(seperator);
+                    });
+                    floorDiv.appendChild(table);
             } catch (err) {
                 console.error(err);
                 emptyState.innerHTML = `<p>생활관을 선택하여 호실을 조회하세요.</p>`;
