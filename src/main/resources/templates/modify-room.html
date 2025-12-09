@@ -202,8 +202,8 @@
 
             const dormCode = dormSelect.value;
 
-                    const roomRes = await fetch(`/admin/api/rooms/info/byDorm?dormCode=${dormCode}`);
-                    const rooms = await roomRes.json();
+            const roomRes = await fetch(`/admin/api/rooms/info/byDorm?dormCode=${dormCode}`);
+            const rooms = await roomRes.json();
 
             const table = document.createElement('table');
             table.classList.add('room-table');
