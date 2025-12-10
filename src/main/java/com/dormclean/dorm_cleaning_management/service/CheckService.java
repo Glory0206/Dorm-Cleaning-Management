@@ -1,8 +1,14 @@
 package com.dormclean.dorm_cleaning_management.service;
 
-import com.dormclean.dorm_cleaning_management.entity.Dorm;
+import com.dormclean.dorm_cleaning_management.dto.CheckRequestDto;
+import com.dormclean.dorm_cleaning_management.dto.CleaningCodeDto;
 
 public interface CheckService {
-    public void checkOut(Dorm dorm, String roomNumber);
-    public void cleanCheck(Dorm dorm, String roomNumber);
+    void checkIn(CheckRequestDto dto);
+
+    void checkOut(CheckRequestDto dto);
+
+    void cleanCheck(CheckRequestDto dto);
+
+    void useCleaningCode(CleaningCodeDto dto);
 }

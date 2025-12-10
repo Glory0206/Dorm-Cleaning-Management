@@ -3,10 +3,14 @@ package com.dormclean.dorm_cleaning_management.service;
 import com.dormclean.dorm_cleaning_management.dto.QrRequestDto;
 import com.dormclean.dorm_cleaning_management.dto.QrResponseDto;
 
+import java.util.List;
+
 public interface QrCodeService {
-    public byte[] createSecureQr(QrRequestDto dto);
+    byte[] createSecureQr(QrRequestDto dto);
 
-    public byte[] generateQrCode(String content, int width, int height);
+    byte[] generateQrCode(String content, int width, int height, String labelText);
 
-    public QrResponseDto getQrData(String token);
+    QrResponseDto getQrData(String token);
+
+    byte[] generateZipForDorms(List<String> dormCodes);
 }

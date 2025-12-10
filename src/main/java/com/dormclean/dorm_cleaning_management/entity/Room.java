@@ -8,7 +8,7 @@ import java.time.Instant;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "room")
+@Table(name = "room", uniqueConstraints = { @UniqueConstraint(columnNames = { "dorm_id", "room_number" }) })
 public class Room {
 
     @Id
@@ -19,14 +19,18 @@ public class Room {
     @JoinColumn(name = "dorm_id", nullable = false)
     private Dorm dorm;
 
+    @Column(nullable = false)
     private Integer floor;
 
+    @Column(nullable = false)
     private String roomNumber;
 
     @Enumerated(EnumType.STRING)
-    private RoomStatus roomStatus = RoomStatus.OCCUPIED;
+    private RoomStatus roomStatus = RoomStatus.READY;
 
     private Instant cleanedAt;
+    private Instant checkInAt;
+    private Instant checkOutAt;
 
     @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private QrCode qrCode;
@@ -36,13 +40,15 @@ public class Room {
             Integer floor,
             String roomNumber,
             RoomStatus status,
-            Instant cleanedAt) {
+            Instant cleanedAt, Instant checkInAt, Instant checkOutAt) {
 
         this.dorm = dorm;
         this.floor = floor;
         this.roomNumber = roomNumber;
-        this.roomStatus = status != null ? status : RoomStatus.OCCUPIED;
+        this.roomStatus = status != null ? status : RoomStatus.READY;
         this.cleanedAt = cleanedAt;
+        this.checkInAt = checkInAt;
+        this.checkOutAt = checkOutAt;
     }
 
     public void updateStatus(RoomStatus status) {
@@ -53,17 +59,38 @@ public class Room {
         this.cleanedAt = cleanedAt;
     }
 
+    public void updateCheckInAt(Instant checkInAt) {
+        this.checkInAt = checkInAt;
+    }
+
+    public void updateCheckOutAt(Instant checkOutAt) {
+        this.checkOutAt = checkOutAt;
+    }
+
     public void assignQrCode(QrCode qrCode) {
         this.qrCode = qrCode;
+    }
+
+    public String getStatus() {
+        switch (roomStatus) {
+            case OCCUPIED:
+                return "OCCUPIED";
+            case VACANT:
+                return "VACANT";
+            case READY:
+                return "READY";
+            default:
+                return "";
+        }
     }
 
     public String getStatusLabel() {
         switch (roomStatus) {
             case OCCUPIED:
                 return "재실";
-            case VACANT_DIRTY:
+            case VACANT:
                 return "공실 (청소 필요)";
-            case VACANT_CLEAN:
+            case READY:
                 return "공실 (청소 완료)";
             default:
                 return "";

@@ -1,13 +1,14 @@
 package com.dormclean.dorm_cleaning_management.service;
 
+import com.dormclean.dorm_cleaning_management.dto.CleaningCodeDto;
+import com.dormclean.dorm_cleaning_management.dto.GetCleaningCodeResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.RegistrationCleaningCodeRequestDto;
 import com.dormclean.dorm_cleaning_management.entity.CleaningCode;
 import com.dormclean.dorm_cleaning_management.repository.CleaningCodeRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,29 +18,31 @@ public class CleaningCodeServiceImpl implements CleaningCodeService {
 
     @Override
     @Transactional
-    public void registration(String cleaningCode) {
-        CleaningCode existingCode = cleaningCodeRepository.findAll()
-                .stream()
-                .findFirst()
+    public void registration(RegistrationCleaningCodeRequestDto dto) {
+        CleaningCode existingCode = cleaningCodeRepository.findById(1L)
                 .orElse(null);
 
         if (existingCode != null) {
             // 이미 있다면 덮어쓰기
-            existingCode.updateCode(cleaningCode);
+            existingCode.updateCode(dto.cleaningCode());
         } else {
             // 없다면 새로 저장
             CleaningCode newCleaningCode = CleaningCode.builder()
-                    .cleaningCode(cleaningCode)
+                    .cleaningCode(dto.cleaningCode())
                     .build();
             cleaningCodeRepository.save(newCleaningCode);
         }
     }
 
     @Override
-    public void useCleaningCode(String cleaningCode) {
-        CleaningCode checkCode = cleaningCodeRepository.findByCleaningCode(cleaningCode)
-                .orElseThrow(() -> new IllegalArgumentException("코드가 유효하지 않습니다."));
+    public GetCleaningCodeResponseDto getCleaningCode() {
+        CleaningCode cleaningCode = cleaningCodeRepository.findById(1L)
+                .orElse(null);
 
-        session.setAttribute("cleaningCode", checkCode.getCleaningCode());
+        if (cleaningCode == null) {
+            return null;
+        }
+
+        return new GetCleaningCodeResponseDto(cleaningCode.getCleaningCode());
     }
 }

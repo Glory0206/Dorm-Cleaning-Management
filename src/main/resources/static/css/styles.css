@@ -68,6 +68,14 @@ main {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.navbar-custom .nav-menu {
+    width: 100vw !important;
+    background-color: white;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin: 0 -20px;
+}
+
+
 .navbar-custom .nav-link {
     color: #FF7F2A !important;
     transition: 0.3s;
@@ -147,6 +155,7 @@ main {
     background: #fff;
     border-radius: 12px;
     padding: 24px;
+    margin-top: 0;
     margin-bottom: 30px;
     gap: 20px;
     display: flex;
@@ -216,6 +225,22 @@ main {
     background: #FFE4CC;
 }
 
+.btn-danger {
+    background: #c62828;
+    color: #fff;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-danger:hover {
+    background: #b71c1c;
+}
+
 /* =========================================
    STATUS PAGE – LEGEND
    ========================================= */
@@ -242,8 +267,8 @@ main {
 }
 
 .legend-color.occupied { background: #4CAF50; }
-.legend-color.vacant-dirty { background: #E57373; }
-.legend-color.vacant-clean { background: #E0E0E0; }
+.legend-color.vacant { background: #E57373; }
+.legend-color.ready { background: #E0E0E0; }
 
 /* =========================================
    STATUS PAGE – ROOM GRID
@@ -273,9 +298,9 @@ main {
     box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
-.room-card.occupied { background: #4CAF50; color: #fff; }
-.room-card.vacant-dirty { background: #E57373; color: #fff; }
-.room-card.vacant-clean { background: #E0E0E0; color: #333; }
+.room-card.occupied { background: #4CAF50 !important; color: #fff !important; }
+.room-card.vacant { background: #E57373 !important; color: #fff !important; }
+.room-card.ready { background: #E0E0E0 !important; color: #333 !important; }
 
 .room-number { font-size: 20px; font-weight: 700; }
 .room-status { font-size: 12px; }
@@ -397,4 +422,221 @@ main {
     font-size: 13px;
     margin-top: 8px;
     color: #6c757d;
+}
+
+/* =========================================
+   BULK SELECT SECTION (일괄 변경 UI)
+   ========================================= */
+.bulk-section {
+    border-radius: 12px;
+    padding: 0px;
+}
+
+.bulk-status-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+}
+
+#bulkStatusSelect {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+/* 선택 모드일 때 방 카드 강조 */
+.room-card.select-mode {
+    outline: 3px solid #FFB366;
+    box-shadow: 0 0 10px rgba(255, 163, 77, 0.6);
+    transform: scale(1.05);
+    opacity: 0.4;
+}
+
+/* 사용자가 클릭해 선택한 방 */
+.room-card.selected {
+    outline: 4px solid #1c5f90;
+    box-shadow: 0 0 8px rgba(28, 95, 144, 0.65);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .bulk-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bulk-status-group {
+        width: 100%;
+    }
+
+    #applyBulkBtn, #bulkSelectBtn {
+        width: 100%;
+    }
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 20px 0 12px;
+    color: #333;
+    text-align: left;
+}
+
+.status-tabs {
+    display: flex;
+    gap: 1rem;
+    /* border-bottom: 2px solid #dee2e6; */
+    padding-bottom: 0rem;
+    margin-bottom: 0rem;
+    margin-left: 2rem;
+}
+
+.status-tabs .tab-item {
+    padding: 0.4rem 1.2rem;
+    border-radius: 8px 8px 0 0;
+    background: #f1f1f1;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.status-tabs .tab-item:hover {
+    background: #e2e2e2;
+}
+
+.status-tabs .tab-item.active {
+    background: #FFB366;
+    color: white;
+}
+
+.room-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.room-cell {
+    width: 10%; /* 10개이므로 10%씩 */
+    padding: 6px;
+    text-align: center;
+}
+
+.floor-separator {
+    border-bottom: 1px solid #e2e2e2;
+    padding: 4px 0;        /* 층 사이 여백 */
+}
+
+.floor-separator td {
+    border-bottom: 2px solid #ccc; /* 구분선 */
+}
+
+/* =========================================
+   QR PAGE - TABS & BULK DOWNLOAD STYLING
+   ========================================= */
+
+/* 1. 탭 네비게이션 커스텀 (기본 파란색 -> 오렌지 테마로 변경) */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+    color: #6c757d; /* 비활성 탭: 회색 */
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    padding: 12px 0;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #FFB366; /* 호버 시 연한 오렌지 */
+    border-color: transparent;
+    background-color: rgba(255, 179, 102, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+    color: #FF7F2A !important; /* 활성 탭: 진한 오렌지 */
+    background-color: transparent !important;
+    border-color: transparent;
+    border-bottom: 3px solid #FFB366; /* 하단 강조선 */
+}
+
+/* 2. 일괄 다운로드 - 생활관 목록 컨테이너 */
+.dorm-list-container {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    /* 스크롤바 디자인 (Webkit 브라우저용) */
+    scrollbar-width: thin;
+    scrollbar-color: #FFB366 #f1f1f1;
+}
+
+.dorm-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dorm-list-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.dorm-list-container::-webkit-scrollbar-thumb {
+    background-color: #FFB366;
+    border-radius: 4px;
+    border: 2px solid #f1f1f1;
+}
+
+/* 3. 체크박스 리스트 아이템 스타일링 */
+.dorm-list-container .form-check {
+    padding: 10px 10px 10px 40px; /* 체크박스 공간 확보 */
+    margin-bottom: 0 !important; /* 마진 초기화 */
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.dorm-list-container .form-check:last-child {
+    border-bottom: none;
+}
+
+.dorm-list-container .form-check:hover {
+    background-color: #fff4e6; /* 호버 시 아주 연한 오렌지 배경 */
+}
+
+/* 4. 부트스트랩 체크박스 색상 오버라이딩 (파랑 -> 오렌지) */
+.form-check-input:checked {
+    background-color: #FFB366;
+    border-color: #FFB366;
+}
+
+.form-check-input:focus {
+    border-color: #FFB366;
+    box-shadow: 0 0 0 0.25rem rgba(255, 179, 102, 0.25);
+}
+
+.custom-check {
+    margin-left: 0 !important;
+}
+
+/* 5. 로딩 스피너 컨테이너 */
+.qr-display-area {
+    position: relative;
+    min-height: 260px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fdfdfd;
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+/* 탭 전환 시 내용이 부드럽게 나타나도록 */
+.tab-content > .tab-pane {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
