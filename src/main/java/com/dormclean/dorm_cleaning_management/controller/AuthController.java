@@ -2,6 +2,8 @@ package com.dormclean.dorm_cleaning_management.controller;
 
 import com.dormclean.dorm_cleaning_management.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +33,13 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-        session.removeAttribute("ADMIN_ID");
+    public ResponseEntity<String> logout(HttpSession session, HttpServletResponse response) {
+        session.invalidate();
+
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setMaxAge(0); // 수명을 0으로 -> 즉시 삭제
+        cookie.setPath("/"); // 모든 경로에서 삭제
+        response.addCookie(cookie);
 
         return ResponseEntity.ok("로그아웃 되었습니다.");
     }
