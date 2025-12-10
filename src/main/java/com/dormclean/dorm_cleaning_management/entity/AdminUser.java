@@ -27,7 +27,7 @@ public class AdminUser extends BaseEntity{
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private AdminRole role;
+    private AdminRole role = AdminRole.COMMON_ADMIN;
 
     private LocalDateTime lastLoginAt;
 
