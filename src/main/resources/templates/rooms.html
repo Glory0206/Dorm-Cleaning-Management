@@ -495,8 +495,8 @@
 
             // 화면에 보이는 카드만 선택
             const flexCards = cards.filter(card => {
-            const style = window.getComputedStyle(card);
-            return style.display === 'flex';
+                const style = window.getComputedStyle(card);
+                return style.display === 'flex';
             });
 
             for (let i = 0; i < flexCards.length; i++) {
@@ -512,14 +512,6 @@
                     room.classList.remove('select-mode');
                     room.classList.add('selected');
                     selectedRooms.push([dormCode, roomNumber]);
-                } else {
-                    room.classList.remove('selected');
-                    room.classList.add('select-mode');
-
-                    // 배열에서 제거
-                    selectedRooms = selectedRooms.filter(
-                        r => !(r[0] === dormCode && r[1] === roomNumber)
-                    );
                 }
             }
         });
