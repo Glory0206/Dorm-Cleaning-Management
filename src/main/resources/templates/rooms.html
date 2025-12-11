@@ -60,10 +60,11 @@
 
             <!-- 일괄 상태 변경 컨트롤 -->
             <div id="bulkSection" class="bulk-section d-flex align-items-center gap-3 position-absolute end-0" style="display: flex !important;">
-                <div class="align-items-center gap-3 position-absolute end-0" style="width: 300px;">
+                <div class="align-items-center gap-3 position-absolute end-0" style="margin-right: 0.3rem; width: 300px;">
                     <button id="bulkSelectBtn" class="btn btn-primary position-absolute end-0">편집</button>
                 </div>
-                <div class="align-items-center gap-3 position-absolute end-0" style="display: flex; flex-direction: row; margin-top: 10rem; width: 300px;">
+                <div class="align-items-center gap-3 position-absolute end-0" style="display: flex; flex-direction: row; margin-top: 10rem; margin-right: -1rem; width: 400px;">
+                    <button id="selectAllkBtn" class="btn btn-primary" style="display: flex; padding: 3%;">전체 선택</button>
                     <div class="bulk-status-group align-items-center">
                         <select id="bulkStatusSelect" class="form-select form-select-sm" style="display: none;">
                             <option value="OCCUPIED">재실</option>
@@ -71,7 +72,7 @@
                             <option value="READY">공실 (청소 완료)</option>
                         </select>
                     </div>
-                    <button id="applyBulkBtn" class="btn btn-primary position-absolute end-0" style="display: none;">적용</button>
+                    <button id="applyBulkBtn" class="btn btn-primary" style="display: none;">적용</button>
                 </div>
             </div>
         </div>
