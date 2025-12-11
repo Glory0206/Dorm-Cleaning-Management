@@ -84,7 +84,10 @@ public class RoomServiceImpl implements RoomService {
                                 r.getDorm().getDormCode(),
                                 r.getFloor(),
                                 r.getRoomNumber(),
-                                r.getStatus());
+                                r.getStatus(),
+                                r.getCleanedAt(),
+                                r.getCheckInAt(),
+                                r.getCheckOutAt());
         }
 
         @Override
