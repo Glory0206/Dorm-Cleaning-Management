@@ -8,9 +8,9 @@ import java.util.List;
 public interface QrCodeService {
     byte[] createSecureQr(QrRequestDto dto);
 
-    byte[] generateQrCode(String content, int width, int height);
+    byte[] generateQrCode(String content, int width, int height, String labelText);
 
     QrResponseDto getQrData(String token);
 
-    byte[] generateZipForDorms(List<String>dormCodes);
+    byte[] generateZipForDorms(List<String> dormCodes);
 }

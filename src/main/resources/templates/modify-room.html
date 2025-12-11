@@ -22,7 +22,7 @@
                 <option value="" selected disabled>생활관을 선택하세요</option>
                 <option th:each="dorm : ${dorms}"
                         th:value="${dorm.dormCode}"
-                        th:text="${dorm.dormCode} + '동{' + ${dorm.dormName} + '}'"></option>
+                        th:text="${dorm.dormCode} + '동'"></option>
             </select>
         </div>
 
@@ -202,8 +202,8 @@
 
             const dormCode = dormSelect.value;
 
-                    const roomRes = await fetch(`/admin/api/rooms/info/byDorm?dormCode=${dormCode}`);
-                    const rooms = await roomRes.json();
+            const roomRes = await fetch(`/admin/api/rooms/info/byDorm?dormCode=${dormCode}`);
+            const rooms = await roomRes.json();
 
             const table = document.createElement('table');
             table.classList.add('room-table');
@@ -324,7 +324,7 @@
 
     // 호실 등록 양식 다운로드
     function downloadExcelTemplate() {
-        window.location.href = '/api/Excel/download';
+        window.location.href = '/admin/api/Excel/download';
     }
 
     // 호실 일괄 등록
@@ -343,7 +343,7 @@
         formData.append("file", fileInput.files[0]);
 
         try {
-            await axios.post('/api/Excel/register', formData, {
+            await axios.post('/admin/api/Excel/register', formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 

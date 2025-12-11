@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class CleaningCodeServiceImpl implements CleaningCodeService {
@@ -34,14 +32,6 @@ public class CleaningCodeServiceImpl implements CleaningCodeService {
                     .build();
             cleaningCodeRepository.save(newCleaningCode);
         }
-    }
-
-    @Override
-    public void useCleaningCode(CleaningCodeDto dto) {
-        CleaningCode checkCode = cleaningCodeRepository.findByCleaningCode(dto.cleaningCode())
-                .orElseThrow(() -> new IllegalArgumentException("코드가 유효하지 않습니다."));
-
-        session.setAttribute("cleaningCode", checkCode.getCleaningCode());
     }
 
     @Override
