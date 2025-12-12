@@ -18,6 +18,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        generate_statistics: true
 
 springdoc:
   swagger-ui:
@@ -30,3 +31,4 @@ logging:
     org:
       hibernate:
         SQL: DEBUG
+        type: trace
