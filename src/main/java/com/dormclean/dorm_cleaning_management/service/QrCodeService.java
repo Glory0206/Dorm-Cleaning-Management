@@ -1,5 +1,6 @@
 package com.dormclean.dorm_cleaning_management.service;
 
+import com.dormclean.dorm_cleaning_management.dto.QrGenerationData;
 import com.dormclean.dorm_cleaning_management.dto.QrRequestDto;
 import com.dormclean.dorm_cleaning_management.dto.QrResponseDto;
 
