@@ -60,10 +60,11 @@
 
             <!-- 일괄 상태 변경 컨트롤 -->
             <div id="bulkSection" class="bulk-section d-flex align-items-center gap-3 position-absolute end-0" style="display: flex !important;">
-                <div class="align-items-center gap-3 position-absolute end-0" style="width: 300px;">
+                <div class="align-items-center gap-3 position-absolute end-0" style="margin-right: 0.3rem; width: 300px;">
                     <button id="bulkSelectBtn" class="btn btn-primary position-absolute end-0">편집</button>
                 </div>
-                <div class="align-items-center gap-3 position-absolute end-0" style="display: flex; flex-direction: row; margin-top: 10rem; width: 300px;">
+                <div class="align-items-center gap-3 position-absolute end-0" style="display: flex; flex-direction: row; margin-top: 10rem; margin-right: -1rem; width: 400px;">
+                    <button id="selectAllBtn" class="btn btn-primary">전체선택</button>
                     <div class="bulk-status-group align-items-center">
                         <select id="bulkStatusSelect" class="form-select form-select-sm" style="display: none;">
                             <option value="OCCUPIED">재실</option>
@@ -71,7 +72,7 @@
                             <option value="READY">공실 (청소 완료)</option>
                         </select>
                     </div>
-                    <button id="applyBulkBtn" class="btn btn-primary position-absolute end-0" style="display: none;">적용</button>
+                    <button id="applyBulkBtn" class="btn btn-primary" style="display: none;">적용</button>
                 </div>
             </div>
         </div>
@@ -140,6 +141,24 @@
                 // 2️⃣ 알파벳 비교
                 return A.suffix.localeCompare(B.suffix);
             });
+        }
+
+        // 시간 포멧 함수
+        function formatTime(raw) {
+            if (!raw) return "";  // null 대응
+            
+            // "2025-12-09 06:46:55.089332" → "2025-12-09T06:46:55.089332"
+            const iso = raw.replace(" ", "T");
+
+            const date = new Date(iso);
+            if (isNaN(date)) return raw; // 파싱 실패하면 원본 출력
+
+            const MM = String(date.getMonth()).padStart(2, "0");
+            const dd = String(date.getDate()).padStart(2, "0");
+            const hh = String(date.getHours()).padStart(2, "0");
+            const mm = String(date.getMinutes()).padStart(2, "0");
+
+            return `${MM}/${dd} ${hh}:${mm}`;
         }
 
         // 생활관 선택 시 층 드롭다운만 갱신
@@ -216,9 +235,20 @@
                             const div = document.createElement('div');
                             div.classList.add('room-card', 'col-2', 'mb-3', 'p-2');
 
-                            if (room.status === 'OCCUPIED') div.classList.add('occupied');
-                            else if (room.status === 'VACANT') div.classList.add('vacant');
-                            else div.classList.add('ready');
+                            let time = null;
+                            // 상태별 색상 적용
+                            if (room.status === 'OCCUPIED') {
+                                div.classList.add('occupied');
+                                time = formatTime(room.checkInAt);
+                            }
+                            else if (room.status === 'VACANT') {
+                                div.classList.add('vacant');
+                                time = formatTime(room.checkOutAt);
+                            }
+                            else {
+                                div.classList.add('ready');
+                                time = formatTime(room.cleanedAt);
+                            }
 
                             div.onclick = () => {
                                 if (!bulkMode)
@@ -229,9 +259,11 @@
 
                             div.dataset.dormCode = dormCode;
                             div.dataset.roomNumber = room.roomNumber;
+                            div.dataset.time = time;
 
                             div.innerHTML = `
-                                <div class="room-number fw-bold">${room.roomNumber}</div>
+                                <div class="room-number fw-bold">${div.dataset.roomNumber}</div>
+                                <div class="room-time fw-bold">${div.dataset.time}</div>
                             `;
                             roomGrid.appendChild(div);
                         });
@@ -276,10 +308,20 @@
                                 const div = document.createElement('div');
                                 div.classList.add('room-card', 'col-2', 'mb-3', 'p-2');
 
+                                let time = null;
                                 // 상태별 색상 적용
-                                if (room.status === 'OCCUPIED') div.classList.add('occupied');
-                                else if (room.status === 'VACANT') div.classList.add('vacant');
-                                else div.classList.add('ready');
+                                if (room.status === 'OCCUPIED') {
+                                    div.classList.add('occupied');
+                                    time = formatTime(room.checkInAt);
+                                }
+                                else if (room.status === 'VACANT') {
+                                    div.classList.add('vacant');
+                                    time = formatTime(room.checkOutAt);
+                                }
+                                else {
+                                    div.classList.add('ready');
+                                    time = formatTime(room.cleanedAt);
+                                }
 
                                 // 클릭 이벤트
                                 div.onclick = () => {
@@ -291,9 +333,11 @@
                                 
                                 div.dataset.dormCode = dormCode;
                                 div.dataset.roomNumber = room.roomNumber;
+                                div.dataset.time = time;
 
                                 div.innerHTML = `
-                                    <div class="room-number fw-bold">${room.roomNumber}</div>
+                                    <div class="room-number fw-bold">${div.dataset.roomNumber}</div>
+                                    <div class="room-time fw-bold">${div.dataset.time}</div>
                                 `;
                                 roomGrid.appendChild(div);
                             });
@@ -326,10 +370,21 @@
                             sortedRooms.forEach(room => {
                                 const div = document.createElement('div');
                                 div.classList.add('room-card', 'col-2', 'mb-3', 'p-2');
-
-                                if (room.status === 'OCCUPIED') div.classList.add('occupied');
-                                else if (room.status === 'VACANT') div.classList.add('vacant');
-                                else div.classList.add('ready');
+                                
+                                let time = null;
+                                // 상태별 색상 적용
+                                if (room.status === 'OCCUPIED') {
+                                    div.classList.add('occupied');
+                                    time = formatTime(room.checkInAt);
+                                }
+                                else if (room.status === 'VACANT') {
+                                    div.classList.add('vacant');
+                                    time = formatTime(room.checkOutAt);
+                                }
+                                else {
+                                    div.classList.add('ready');
+                                    time = formatTime(room.cleanedAt);
+                                }
 
                                 div.onclick = () => {
                                     if (!bulkMode)
@@ -340,9 +395,11 @@
 
                                 div.dataset.dormCode = dorm.dormCode;
                                 div.dataset.roomNumber = room.roomNumber;
+                                div.dataset.time = time;
 
                                 div.innerHTML = `
-                                    <div class="room-number fw-bold">${room.roomNumber}</div>
+                                    <div class="room-number fw-bold">${div.dataset.roomNumber}</div>
+                                    <div class="room-time fw-bold">${div.dataset.time}</div>
                                 `;
                                 roomGrid.appendChild(div);
                             });
@@ -426,10 +483,12 @@
                 const bulkSelectBtn = document.getElementById('bulkSelectBtn');
                 bulkSelectBtn.classList.remove('btn-primary');
                 bulkSelectBtn.classList.add('btn-secondary');
-                bulkSelectBtn.textContent = '해제';
+                bulkSelectBtn.textContent = '취소';
                 
+                const selectAllBtn = document.getElementById('selectAllBtn');
                 const bulkStatusSelect = document.getElementById('bulkStatusSelect');
                 const applyBulkBtn = document.getElementById('applyBulkBtn');
+                selectAllBtn.style.display = 'flex';
                 bulkStatusSelect.style.display = 'flex';
                 applyBulkBtn.style.display = 'flex';
             }
@@ -450,8 +509,10 @@
                 bulkSelectBtn.classList.add('btn-primary');
                 bulkSelectBtn.textContent = '편집';
 
+                const selectAllBtn = document.getElementById('selectAllBtn');
                 const bulkStatusSelect = document.getElementById('bulkStatusSelect');
                 const applyBulkBtn = document.getElementById('applyBulkBtn');
+                selectAllBtn.style.display = 'none';
                 bulkStatusSelect.style.display = 'none';
                 applyBulkBtn.style.display = 'none';
 
@@ -462,6 +523,14 @@
         // 선택모드에서 호실 선택
         let selectedRooms = []
         function selectRoom(dormCode, roomNumber) {
+            const cards = Array.from(document.querySelectorAll('.room-card'));
+
+            // 화면에 보이는 카드만 선택
+            const flexCards = cards.filter(card => {
+                const style = window.getComputedStyle(card);
+                return style.display === 'flex';
+            });
+
             const room = document.querySelector(`.room-card[data-dorm-code="${dormCode}"][data-room-number="${roomNumber}"]`);
             
             // 이미 선택됐는지 확인
@@ -473,6 +542,12 @@
                 room.classList.remove('select-mode');
                 room.classList.add('selected');
                 selectedRooms.push([dormCode, roomNumber]);
+                if (flexCards.length === selectedRooms.length) {
+                    selectAll = true;
+                    selectAllBtn.classList.remove("btn-primary");
+                    selectAllBtn.classList.add("btn-secondary");
+                    selectAllBtn.innerHTML = "선택해제";
+                }
             } else {
                 room.classList.remove('selected');
                 room.classList.add('select-mode');
@@ -481,8 +556,74 @@
                 selectedRooms = selectedRooms.filter(
                     r => !(r[0] === dormCode && r[1] === roomNumber)
                 );
+                selectAll = false;
+                selectAllBtn.classList.remove("btn-secondary");
+                selectAllBtn.classList.add("btn-primary");
+                selectAllBtn.innerHTML = "전체선택";
             }
         }
+
+        // 일괄 선택 버튼 
+        let selectAll = false;
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        document.getElementById('selectAllBtn').addEventListener('click', () => {
+            const cards = Array.from(document.querySelectorAll('.room-card'));
+
+            // 화면에 보이는 카드만 선택
+            const flexCards = cards.filter(card => {
+                const style = window.getComputedStyle(card);
+                return style.display === 'flex';
+            });
+
+            if (!selectAll) {
+                for (let i = 0; i < flexCards.length; i++) {
+                    const room = flexCards[i];
+                    const dormCode = room.dataset.dormCode;
+                    const roomNumber = room.dataset.roomNumber;
+
+                    // 이미 선택됐는지 확인
+                    const isSelected = selectedRooms.some(
+                        r => r[0] === dormCode && r[1] === roomNumber
+                    );
+
+                    if (!isSelected) {
+                        room.classList.remove('select-mode');
+                        room.classList.add('selected');
+                        selectedRooms.push([dormCode, roomNumber]);
+                    }
+                }
+                selectAll = true;
+                selectAllBtn.classList.remove("btn-primary");
+                selectAllBtn.classList.add("btn-secondary");
+                selectAllBtn.innerHTML = "선택해제";
+            }
+            else {
+                for (let i = 0; i < flexCards.length; i++) {
+                    const room = flexCards[i];
+                    const dormCode = room.dataset.dormCode;
+                    const roomNumber = room.dataset.roomNumber;
+
+                    // 이미 선택됐는지 확인
+                    const isSelected = selectedRooms.some(
+                        r => r[0] === dormCode && r[1] === roomNumber
+                    );
+
+                    if (isSelected) {
+                        room.classList.remove('selected');
+                        room.classList.add('select-mode');
+
+                        // 배열에서 제거
+                        selectedRooms = selectedRooms.filter(
+                            r => !(r[0] === dormCode && r[1] === roomNumber)
+                        );
+                    }
+                }
+                selectAll = false;
+                selectAllBtn.classList.remove("btn-secondary");
+                selectAllBtn.classList.add("btn-primary");
+                selectAllBtn.innerHTML = "전체선택";
+            }
+        });
 
         // 호실 상태 일괄 변경
         async function updateAllSelectedRoom() {
