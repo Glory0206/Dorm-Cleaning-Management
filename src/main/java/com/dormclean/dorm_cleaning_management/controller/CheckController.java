@@ -1,7 +1,7 @@
 package com.dormclean.dorm_cleaning_management.controller;
 
-import com.dormclean.dorm_cleaning_management.dto.CheckRequestDto;
-import com.dormclean.dorm_cleaning_management.dto.CleaningCodeDto;
+import com.dormclean.dorm_cleaning_management.dto.check.CheckRequestDto;
+import com.dormclean.dorm_cleaning_management.dto.cleaning.CleaningCodeDto;
 import com.dormclean.dorm_cleaning_management.service.CheckService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

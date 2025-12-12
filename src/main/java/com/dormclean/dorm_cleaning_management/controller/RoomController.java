@@ -1,10 +1,9 @@
 package com.dormclean.dorm_cleaning_management.controller;
 
-import com.dormclean.dorm_cleaning_management.dto.CreateRoomRequestDto;
-import com.dormclean.dorm_cleaning_management.dto.RoomListResponseDto;
-import com.dormclean.dorm_cleaning_management.dto.RoomStatusUpdateDto;
+import com.dormclean.dorm_cleaning_management.dto.room.CreateRoomRequestDto;
+import com.dormclean.dorm_cleaning_management.dto.room.RoomListResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.room.RoomStatusUpdateDto;
 import com.dormclean.dorm_cleaning_management.entity.Room;
-import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.service.RoomService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;

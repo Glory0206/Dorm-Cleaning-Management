@@ -1,9 +1,9 @@
 package com.dormclean.dorm_cleaning_management.service;
 
-import com.dormclean.dorm_cleaning_management.dto.QrGenerationData;
-import com.dormclean.dorm_cleaning_management.dto.QrRequestDto;
-import com.dormclean.dorm_cleaning_management.dto.QrResponseDto;
-import com.dormclean.dorm_cleaning_management.dto.ZipFileEntry;
+import com.dormclean.dorm_cleaning_management.dto.zipFile.QrGenerationData;
+import com.dormclean.dorm_cleaning_management.dto.qr.QrRequestDto;
+import com.dormclean.dorm_cleaning_management.dto.qr.QrResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.zipFile.ZipFileEntry;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.QrCode;
 import com.dormclean.dorm_cleaning_management.entity.Room;

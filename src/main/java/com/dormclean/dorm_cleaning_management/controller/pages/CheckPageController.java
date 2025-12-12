@@ -1,9 +1,8 @@
 package com.dormclean.dorm_cleaning_management.controller.pages;
 
-import com.dormclean.dorm_cleaning_management.dto.QrResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.qr.QrResponseDto;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
-import com.dormclean.dorm_cleaning_management.repository.CleaningCodeRepository;
 import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.repository.RoomRepository;
 import com.dormclean.dorm_cleaning_management.service.QrCodeService;

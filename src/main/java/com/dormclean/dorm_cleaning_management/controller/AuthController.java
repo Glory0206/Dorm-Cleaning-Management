@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.dormclean.dorm_cleaning_management.dto.AdminLoginResponseDto;
-import com.dormclean.dorm_cleaning_management.dto.AdminLoginRequestDto;
+import com.dormclean.dorm_cleaning_management.dto.admin.AdminLoginResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.admin.AdminLoginRequestDto;
 
 @RestController
 @RequestMapping("/admin/api")

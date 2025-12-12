@@ -1,4 +1,4 @@
-package com.dormclean.dorm_cleaning_management.dto;
+package com.dormclean.dorm_cleaning_management.dto.zipFile;
 
 public record ZipFileEntry(
         String fileName,     // ex) 기숙사A/QR_A동_101호.png

@@ -1,8 +1,7 @@
 package com.dormclean.dorm_cleaning_management.service;
 
-import com.dormclean.dorm_cleaning_management.dto.CleaningCodeDto;
-import com.dormclean.dorm_cleaning_management.dto.GetCleaningCodeResponseDto;
-import com.dormclean.dorm_cleaning_management.dto.RegistrationCleaningCodeRequestDto;
+import com.dormclean.dorm_cleaning_management.dto.cleaning.GetCleaningCodeResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.cleaning.RegistrationCleaningCodeRequestDto;
 import com.dormclean.dorm_cleaning_management.entity.CleaningCode;
 import com.dormclean.dorm_cleaning_management.repository.CleaningCodeRepository;
 import jakarta.servlet.http.HttpSession;
