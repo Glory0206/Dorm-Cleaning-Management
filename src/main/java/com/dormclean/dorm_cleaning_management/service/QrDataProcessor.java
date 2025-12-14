@@ -39,7 +39,7 @@ public class QrDataProcessor {
 
         for (String dormCode : dormCodes) {
             Dorm dorm = dormRepository.findByDormCode(dormCode)
-                    .orElseThrow(() -> new IllegalArgumentException("기숙사 정보 없음: " + dormCode));
+                    .orElseThrow(() -> new IllegalArgumentException("생활관 정보 없음: " + dormCode));
 
             List<Room> rooms = roomRepository.findByDorm(dorm);
 

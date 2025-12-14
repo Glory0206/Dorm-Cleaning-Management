@@ -26,7 +26,7 @@ public class RoomServiceImpl implements RoomService {
         public Room createRoom(CreateRoomRequestDto dto) {
 
                 Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                                .orElseThrow(() -> new IllegalArgumentException("해당 dormCode의 기숙사가 없습니다."));
+                                .orElseThrow(() -> new IllegalArgumentException("해당 생활관이 존재하지 않습니다."));
 
                 Integer floor = extractFloor(dto.roomNumber());
 

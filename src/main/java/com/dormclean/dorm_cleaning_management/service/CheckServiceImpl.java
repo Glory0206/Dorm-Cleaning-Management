@@ -11,6 +11,7 @@ import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.repository.RoomRepository;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class CheckServiceImpl implements CheckService {
     @Override
     public void checkIn(CheckRequestDto dto) {
         Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 생활관입니다."));
         Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new IllegalArgumentException("해당 호실이 존재하지 않습니다."));
         if (room.getRoomStatus() == RoomStatus.READY) {
@@ -41,7 +42,7 @@ public class CheckServiceImpl implements CheckService {
     @Override
     public void checkOut(CheckRequestDto dto) {
         Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 생활관입니다."));
         Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new IllegalArgumentException("해당 호실이 존재하지 않습니다."));
 
@@ -54,7 +55,7 @@ public class CheckServiceImpl implements CheckService {
     @Override
     public void cleanCheck(CheckRequestDto dto) {
         Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 기숙사입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 생활관입니다."));
         Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new IllegalArgumentException("해당 호실이 존재하지 않습니다."));
 
