@@ -71,18 +71,6 @@ public class Room {
         this.qrCode = qrCode;
     }
 
-    public String getStatus() {
-        switch (roomStatus) {
-            case OCCUPIED:
-                return "OCCUPIED";
-            case VACANT:
-                return "VACANT";
-            case READY:
-                return "READY";
-            default:
-                return "";
-        }
-    }
 
     public String getStatusLabel() {
         switch (roomStatus) {

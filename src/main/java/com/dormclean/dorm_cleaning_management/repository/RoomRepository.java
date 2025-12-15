@@ -1,5 +1,6 @@
 package com.dormclean.dorm_cleaning_management.repository;
 
+import com.dormclean.dorm_cleaning_management.dto.room.RoomListResponseDto;
 import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -49,4 +50,53 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             RoomStatus status,
             Instant now
     );
+
+    @Query("""
+    select new com.dormclean.dorm_cleaning_management.dto.room.RoomListResponseDto(
+        r.dorm.dormCode,
+        r.floor,
+        r.roomNumber,
+        r.roomStatus,
+        r.cleanedAt,
+        r.checkInAt,
+        r.checkOutAt
+    )
+    from Room r
+    """)
+    List<RoomListResponseDto> findAllRoomsDto();
+
+    @Query("""
+    select new com.dormclean.dorm_cleaning_management.dto.room.RoomListResponseDto(
+        r.dorm.dormCode,
+        r.floor,
+        r.roomNumber,
+        r.roomStatus,
+        r.cleanedAt,
+        r.checkInAt,
+        r.checkOutAt        
+        )
+     from Room r
+     where r.dorm.dormCode = :dormCode
+    """)
+    List<RoomListResponseDto> findRoomByDormCode(String dormCode);
+
+    @Query("""
+    select new com.dormclean.dorm_cleaning_management.dto.room.RoomListResponseDto(
+        r.dorm.dormCode,
+        r.floor,
+        r.roomNumber,
+        r.roomStatus,
+        r.cleanedAt,
+        r.checkInAt,
+        r.checkOutAt
+    )
+    from Room r
+    where r.dorm.dormCode = :dormCode
+      and r.floor = :floor
+    """)
+    List<RoomListResponseDto> findRoomByDormCodeAndFloor(
+            String dormCode,
+            Integer floor
+    );
+
 }
