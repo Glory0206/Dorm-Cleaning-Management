@@ -637,10 +637,12 @@
 
                     if (!res.ok) return;
 
-                    const rooms = await res.json();
-                    updatedRooms.push(...rooms);
+                    const {updatedCount} = await res.json();
+                    console.log(`${dormCode}: ${updatedCount}개 방 상태 변경됨`);
                 })
             );
+            initRooms();
+            // window.location.reload();
 
             updatedRooms.forEach(room => {
                 const card = document.querySelector(

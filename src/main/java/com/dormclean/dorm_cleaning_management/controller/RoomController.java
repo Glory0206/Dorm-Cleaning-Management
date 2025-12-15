@@ -59,10 +59,13 @@ public class RoomController {
     }
 
     @PatchMapping("/rooms/bulk-status")
-    public ResponseEntity<List<RoomListResponseDto>> updateRoomsBulk(
+    public ResponseEntity<BulkUpdateResponseDto> updateRoomsBulk(
             @RequestBody BulkRoomStatusUpdateDto dto) {
-        List<RoomListResponseDto> updatedRooms = roomService.updateRoomStatusBulk(dto);
-        return ResponseEntity.ok(updatedRooms);
+        int updatedCount = roomService.updateRoomStatusBulk(dto);
+
+        return ResponseEntity.ok(
+            new BulkUpdateResponseDto(updatedCount)
+        );
     }
 
     // 생활관 층 목록 반환
