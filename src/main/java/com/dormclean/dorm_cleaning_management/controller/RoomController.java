@@ -1,9 +1,6 @@
 package com.dormclean.dorm_cleaning_management.controller;
 
-import com.dormclean.dorm_cleaning_management.dto.BulkRoomStatusUpdateDto;
-import com.dormclean.dorm_cleaning_management.dto.CreateRoomRequestDto;
-import com.dormclean.dorm_cleaning_management.dto.RoomListResponseDto;
-import com.dormclean.dorm_cleaning_management.dto.RoomStatusUpdateDto;
+import com.dormclean.dorm_cleaning_management.dto.room.*;
 import com.dormclean.dorm_cleaning_management.entity.Room;
 import com.dormclean.dorm_cleaning_management.service.RoomService;
 
