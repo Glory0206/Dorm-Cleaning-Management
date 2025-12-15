@@ -69,12 +69,9 @@ public class RoomServiceImpl implements RoomService {
         // 특정 Dorm의 모든 방 조회 (층 목록 등)
         @Override
         public List<RoomListResponseDto> getRooms(String dormCode) {
-                Dorm dorm = dormRepository.findByDormCode(dormCode)
-                                .orElseThrow(() -> new IllegalArgumentException("Dorm not found"));
+            List<Room> rooms = roomRepository.findByDorm_DormCode(dormCode);
 
-                List<Room> rooms = roomRepository.findByDorm(dorm);
-
-                return rooms.stream()
+            return rooms.stream()
                                 .map(this::toRoomListDto)
                                 .toList();
         }
