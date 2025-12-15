@@ -19,7 +19,7 @@ public interface RoomService {
 
     RoomListResponseDto updateRoomStatus(String roomNumber, RoomStatusUpdateDto dto);
 
-    List<RoomListResponseDto> updateRoomStatusBulk(BulkRoomStatusUpdateDto dto);
+    int updateRoomStatusBulk(BulkRoomStatusUpdateDto dto);
 
     void deleteRoom(String dormCode, String roomNumber);
 }

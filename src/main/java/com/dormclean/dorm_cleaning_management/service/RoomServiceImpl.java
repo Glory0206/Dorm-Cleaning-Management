@@ -156,44 +156,20 @@ public class RoomServiceImpl implements RoomService {
 
         @Override
         @Transactional
-        public List<RoomListResponseDto> updateRoomStatusBulk(BulkRoomStatusUpdateDto dto) {
+        public int updateRoomStatusBulk(BulkRoomStatusUpdateDto dto) {
                 Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
                                 .orElseThrow(() -> new IllegalArgumentException("생활관 없음"));
 
                 Instant now = Instant.now();
+                RoomStatus status = RoomStatus.valueOf(dto.newRoomStatus());
 
-                List<Room> rooms = roomRepository
-                                .findByDormAndRoomNumberIn(dorm, dto.roomNumbers());
-
-                List<RoomListResponseDto> updatedRooms = new ArrayList<>();
-
-                for (Room room : rooms) {
-                        switch (dto.newRoomStatus()) {
-                                case "OCCUPIED" -> {
-                                        room.updateStatus(RoomStatus.OCCUPIED);
-                                        room.updateCheckInAt(now);
-                                }
-                                case "READY" -> {
-                                        room.updateStatus(RoomStatus.READY);
-                                        room.updateCleanedAt(now);
-                                }
-                                case "VACANT" -> {
-                                        room.updateStatus(RoomStatus.VACANT);
-                                        room.updateCheckOutAt(now);
-                                }
-                        }
-                        updatedRooms.add(
-                                        new RoomListResponseDto(
-                                                        dorm.getDormCode(),
-                                                        room.getFloor(),
-                                                        room.getRoomNumber(),
-                                                        room.getStatus(),
-                                                        room.getCleanedAt(),
-                                                        room.getCheckInAt(),
-                                                        room.getCheckOutAt()));
-                }
-
-                return updatedRooms;
+                // 일괄 업데이트
+                return roomRepository.bulkStatusUpdate(
+                        dorm,
+                        dto.roomNumbers(),
+                        status,
+                        now
+                );
         }
 
         // 호실 삭제
