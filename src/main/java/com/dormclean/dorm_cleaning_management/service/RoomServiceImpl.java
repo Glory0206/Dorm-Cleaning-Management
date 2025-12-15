@@ -57,18 +57,21 @@ public class RoomServiceImpl implements RoomService {
 
         // 모든 방 조회 (층 목록 등)
         @Override
+        @Transactional(readOnly = true)
         public List<RoomListResponseDto> getRooms() {
             return roomRepository.findAllRoomsDto();
         }
 
         // 특정 Dorm의 모든 방 조회 (층 목록 등)
         @Override
+        @Transactional(readOnly = true)
         public List<RoomListResponseDto> getRooms(String dormCode) {
             return roomRepository.findRoomByDormCode(dormCode);
         }
 
         // 특정 Dorm + Floor의 방 목록 조회
         @Override
+        @Transactional(readOnly = true)
         public List<RoomListResponseDto> getRooms(String dormCode, Integer floor) {
             return roomRepository.findRoomByDormCodeAndFloor(dormCode, floor);
         }
