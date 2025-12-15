@@ -57,48 +57,23 @@ public class RoomServiceImpl implements RoomService {
 
         // 모든 방 조회 (층 목록 등)
         @Override
+        @Transactional(readOnly = true)
         public List<RoomListResponseDto> getRooms() {
-                List<Room> rooms = roomRepository.findAll();
-
-                return rooms.stream()
-                                .map(this::toRoomListDto)
-                                .toList();
+            return roomRepository.findAllRoomsDto();
         }
 
         // 특정 Dorm의 모든 방 조회 (층 목록 등)
         @Override
+        @Transactional(readOnly = true)
         public List<RoomListResponseDto> getRooms(String dormCode) {
-                Dorm dorm = dormRepository.findByDormCode(dormCode)
-                                .orElseThrow(() -> new IllegalArgumentException("Dorm not found"));
-
-                List<Room> rooms = roomRepository.findByDorm(dorm);
-
-                return rooms.stream()
-                                .map(this::toRoomListDto)
-                                .toList();
+            return roomRepository.findRoomByDormCode(dormCode);
         }
 
         // 특정 Dorm + Floor의 방 목록 조회
         @Override
+        @Transactional(readOnly = true)
         public List<RoomListResponseDto> getRooms(String dormCode, Integer floor) {
-                Dorm dorm = dormRepository.findByDormCode(dormCode)
-                                .orElseThrow(() -> new RuntimeException("Dorm not found"));
-                List<Room> rooms = roomRepository.findByDormAndFloor(dorm, floor);
-
-                return rooms.stream()
-                                .map(this::toRoomListDto)
-                                .toList();
-        }
-
-        private RoomListResponseDto toRoomListDto(Room r) {
-                return new RoomListResponseDto(
-                                r.getDorm().getDormCode(),
-                                r.getFloor(),
-                                r.getRoomNumber(),
-                                r.getStatus(),
-                                r.getCleanedAt(),
-                                r.getCheckInAt(),
-                                r.getCheckOutAt());
+            return roomRepository.findRoomByDormCodeAndFloor(dormCode, floor);
         }
 
         @Override
@@ -148,7 +123,7 @@ public class RoomServiceImpl implements RoomService {
                                 dorm.getDormCode(),
                                 room.getFloor(),
                                 room.getRoomNumber(),
-                                room.getStatus(),
+                                room.getRoomStatus(),
                                 room.getCleanedAt(),
                                 room.getCheckInAt(),
                                 room.getCheckOutAt());
