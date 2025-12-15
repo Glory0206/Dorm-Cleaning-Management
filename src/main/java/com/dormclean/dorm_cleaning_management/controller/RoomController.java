@@ -1,5 +1,6 @@
 package com.dormclean.dorm_cleaning_management.controller;
 
+import com.dormclean.dorm_cleaning_management.dto.BulkRoomStatusUpdateDto;
 import com.dormclean.dorm_cleaning_management.dto.CreateRoomRequestDto;
 import com.dormclean.dorm_cleaning_management.dto.RoomListResponseDto;
 import com.dormclean.dorm_cleaning_management.dto.RoomStatusUpdateDto;
@@ -13,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,6 +59,13 @@ public class RoomController {
         RoomListResponseDto updatedRoom = roomService.updateRoomStatus(roomNumber, dto);
 
         return ResponseEntity.ok(updatedRoom);
+    }
+
+    @PatchMapping("/rooms/bulk-status")
+    public ResponseEntity<List<RoomListResponseDto>> updateRoomsBulk(
+            @RequestBody BulkRoomStatusUpdateDto dto) {
+        List<RoomListResponseDto> updatedRooms = roomService.updateRoomStatusBulk(dto);
+        return ResponseEntity.ok(updatedRooms);
     }
 
     // 생활관 층 목록 반환

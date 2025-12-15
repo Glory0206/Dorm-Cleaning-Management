@@ -2,6 +2,7 @@ package com.dormclean.dorm_cleaning_management.service;
 
 import java.util.List;
 
+import com.dormclean.dorm_cleaning_management.dto.BulkRoomStatusUpdateDto;
 import com.dormclean.dorm_cleaning_management.dto.CreateRoomRequestDto;
 import com.dormclean.dorm_cleaning_management.dto.RoomListResponseDto;
 import com.dormclean.dorm_cleaning_management.dto.RoomStatusUpdateDto;
@@ -20,6 +21,7 @@ public interface RoomService {
 
     RoomListResponseDto updateRoomStatus(String roomNumber, RoomStatusUpdateDto dto);
 
-    void deleteRoom(String dormCode, String roomNumber);
+    List<RoomListResponseDto> updateRoomStatusBulk(BulkRoomStatusUpdateDto dto);
 
+    void deleteRoom(String dormCode, String roomNumber);
 }

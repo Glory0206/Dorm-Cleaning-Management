@@ -26,4 +26,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     // 특정 기숙사의 방 조회
     Optional<Room> findByDormAndRoomNumber(Dorm dorm, String roomNumber);
+
+    List<Room> findByDormAndRoomNumberIn(Dorm dorm, List<String> roomNumbers);
 }

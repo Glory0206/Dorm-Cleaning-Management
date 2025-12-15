@@ -521,7 +521,6 @@
         });
 
         // 선택모드에서 호실 선택
-        let selectedRooms = []
         function selectRoom(dormCode, roomNumber) {
             const cards = Array.from(document.querySelectorAll('.room-card'));
 
@@ -626,31 +625,69 @@
         });
 
         // 호실 상태 일괄 변경
+        let selectedRooms = []
         async function updateAllSelectedRoom() {
+            if (selectedRooms.length === 0) return;
+
             const newStatus = document.getElementById('bulkStatusSelect').value;
 
+            // dormCode 기준 그룹핑
+            const grouped = {};
+            selectedRooms.forEach(([dormCode, roomNumber]) => {
+                if (!grouped[dormCode]) grouped[dormCode] = [];
+                grouped[dormCode].push(roomNumber);
+            });
+
+            // ✅ 모든 응답 결과를 모을 배열
+            const updatedRooms = [];
+
+            // dormCode별로 bulk 호출
             await Promise.all(
-                selectedRooms.map(([dormCode, roomNumber]) =>
-                    fetch(`/admin/api/rooms/${roomNumber}/status`, {
+                Object.entries(grouped).map(async ([dormCode, roomNumbers]) => {
+                    const res = await fetch(`/admin/api/rooms/bulk-status`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ dormCode, newRoomStatus: newStatus })
-                    })
-                )
+                        body: JSON.stringify({
+                            dormCode,
+                            roomNumbers,
+                            newRoomStatus: newStatus
+                        })
+                    });
+
+                    if (!res.ok) {
+                        console.error("일괄 변경 실패", dormCode);
+                        return;
+                    }
+
+                    // ✅ 서버가 반환한 변경된 방 리스트
+                    const rooms = await res.json();
+                    updatedRooms.push(...rooms);
+                })
             );
 
-            selectedRooms.forEach(([dormCode, roomNumber]) => {
+            // ✅ 서버 응답 기준으로 UI 갱신
+            updatedRooms.forEach(room => {
                 const card = document.querySelector(
-                    `.room-card[data-dorm-code="${dormCode}"][data-room-number="${roomNumber}"]`
+                    `.room-card[data-dorm-code="${room.dormCode}"][data-room-number="${room.roomNumber}"]`
                 );
-                if (card) {
-                    card.dataset.status = newStatus;
-                    applyCardStatusStyle(card);
+
+                if (!card) return;
+
+                let time = "";
+                if (room.status === "OCCUPIED") {
+                    time = formatTime(room.checkInAt);
+                } else if (room.status === "VACANT") {
+                    time = formatTime(room.checkOutAt);
+                } else if (room.status === "READY") {
+                    time = formatTime(room.cleanedAt);
                 }
+
+                updateRoomCardUI(card, room.status, time);
             });
 
             applyStatusFilter(selectedStatus);
         }
+
 
         // 일괄 변경 적용 버튼 
         document.getElementById('applyBulkBtn').addEventListener('click', () => {
