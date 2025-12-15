@@ -1,9 +1,6 @@
 package com.dormclean.dorm_cleaning_management.service;
 
-import com.dormclean.dorm_cleaning_management.dto.BulkRoomStatusUpdateDto;
-import com.dormclean.dorm_cleaning_management.dto.CreateRoomRequestDto;
-import com.dormclean.dorm_cleaning_management.dto.RoomListResponseDto;
-import com.dormclean.dorm_cleaning_management.dto.RoomStatusUpdateDto;
+import com.dormclean.dorm_cleaning_management.dto.room.*;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
 import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
@@ -12,7 +9,6 @@ import com.dormclean.dorm_cleaning_management.repository.RoomRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +27,7 @@ public class RoomServiceImpl implements RoomService {
         public Room createRoom(CreateRoomRequestDto dto) {
 
                 Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                                .orElseThrow(() -> new IllegalArgumentException("해당 dormCode의 기숙사가 없습니다."));
+                                .orElseThrow(() -> new IllegalArgumentException("해당 생활관이 존재하지 않습니다."));
 
                 Integer floor = extractFloor(dto.roomNumber());
 

@@ -1,7 +1,9 @@
 package com.dormclean.dorm_cleaning_management.service;
 
-import com.dormclean.dorm_cleaning_management.dto.QrRequestDto;
-import com.dormclean.dorm_cleaning_management.dto.QrResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.zipFile.QrGenerationData;
+import com.dormclean.dorm_cleaning_management.dto.qr.QrRequestDto;
+import com.dormclean.dorm_cleaning_management.dto.qr.QrResponseDto;
+import com.dormclean.dorm_cleaning_management.dto.zipFile.ZipFileEntry;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.QrCode;
 import com.dormclean.dorm_cleaning_management.entity.Room;
@@ -22,6 +24,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -35,12 +38,13 @@ public class QrCodeServiceImpl implements QrCodeService {
     private final QrCodeRepository qrCodeRepository;
     private final RoomRepository roomRepository;
     private final DormRepository dormRepository;
+    private final QrDataProcessor qrDataProcessor;
 
     @Override
     @Transactional
     public byte[] createSecureQr(QrRequestDto dto) {
         Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                .orElseThrow(() -> new RuntimeException("해당 기숙사의 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("해당 생활관의 정보를 찾을 수 없습니다."));
         Room room = roomRepository.findByDormAndRoomNumber(dorm, dto.roomNumber())
                 .orElseThrow(() -> new RuntimeException("해당 호실의 정보를 찾을 수 없습니다."));
 
@@ -125,34 +129,41 @@ public class QrCodeServiceImpl implements QrCodeService {
     }
 
     @Override
-    @Transactional
     public byte[] generateZipForDorms(List<String> dormCodes) {
-        ByteArrayOutputStream zipOutputStream = new ByteArrayOutputStream();
+        // 데이터 준비 및 qrCode 업데이트/저장
+        List<QrGenerationData> qrDataList = qrDataProcessor.prepareQrDataAndSaveBulk(dormCodes);
 
-        try (ZipOutputStream zip = new ZipOutputStream(zipOutputStream)) {
-            for (String dormCode : dormCodes) {
-                Dorm dorm = dormRepository.findByDormCode(dormCode)
-                        .orElseThrow(() -> new IllegalArgumentException("기숙사의 정보를 찾을 수 없습니다."));
+        // 순서가 섞이지 않도록 리스트 처리는 주의해야 하나, ZIP 내 파일명이 명확하므로 병렬 처리 결과 수집이 더 중요
+        List<ZipFileEntry> zipEntries = qrDataList.parallelStream()
+                .map(data ->{
+                    byte[] imageBytes = generateQrCode(
+                            data.content(),
+                            250,
+                            250,
+                            data.labelText()
+                    );
+                    return new ZipFileEntry(data.fileName(), imageBytes);
+                })
+                .toList();
 
-                List<Room> rooms = roomRepository.findByDorm(dorm);
+        return createZipFromEntries(zipEntries);
+    }
 
-                String dormFolder = dormCode + "/";
+    private byte[] createZipFromEntries(List<ZipFileEntry> entries) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ZipOutputStream zip = new ZipOutputStream(baos)) {
 
-                for (Room room : rooms) {
-                    QrRequestDto dto = new QrRequestDto(dormCode, room.getRoomNumber());
-                    byte[] qrImages = createSecureQr(dto);
-
-                    ZipEntry entry = new ZipEntry(dormFolder + "QR_" + dormCode + "동_" + room.getRoomNumber() + "호.png");
-                    zip.putNextEntry(entry);
-                    zip.write(qrImages);
-                    zip.closeEntry();
-                }
+            for (ZipFileEntry entry : entries) {
+                ZipEntry zipEntry = new ZipEntry(entry.fileName());
+                zip.putNextEntry(zipEntry);
+                zip.write(entry.imageBytes());
+                zip.closeEntry();
             }
-        } catch (Exception e) {
-            throw new RuntimeException("다중 생활관 QR ZIP 생성 중 오류 발생", e);
+            zip.finish();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("ZIP 생성 실패", e);
         }
-
-        return zipOutputStream.toByteArray();
     }
 
     @Override
