@@ -1,7 +1,8 @@
 package com.dormclean.dorm_cleaning_management.controller;
 
 import com.dormclean.dorm_cleaning_management.dto.qr.QrRequestDto;
-import com.dormclean.dorm_cleaning_management.service.QrCodeService;
+import com.dormclean.dorm_cleaning_management.service.qr.QrCodeService;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
