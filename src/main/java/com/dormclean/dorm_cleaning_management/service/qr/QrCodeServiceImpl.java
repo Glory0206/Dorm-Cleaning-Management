@@ -175,7 +175,12 @@ public class QrCodeServiceImpl implements QrCodeService {
         String dormCode = qrCode.getRoom().getDorm().getDormCode();
         String roomNumber = qrCode.getRoom().getRoomNumber();
 
+        Dorm dorm = dormRepository.findByDormCode(dormCode)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 생활관입니다."));
+        Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 호실입니다."));
+
         // 찾은 정보를 DTO로 변환해서 반환
-        return new QrResponseDto(dormCode, roomNumber);
+        return new QrResponseDto(dorm.getDormCode(), room.getRoomNumber(), room.getRoomStatus());
     }
 }
