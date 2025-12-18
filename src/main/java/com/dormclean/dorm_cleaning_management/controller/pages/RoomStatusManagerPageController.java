@@ -1,0 +1,27 @@
+package com.dormclean.dorm_cleaning_management.controller.pages;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.dormclean.dorm_cleaning_management.entity.Dorm;
+import com.dormclean.dorm_cleaning_management.repository.DormRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/admin")
+public class RoomStatusManagerPageController {
+    private final DormRepository dormRepository;
+
+    @GetMapping("/room-status-manager")
+    public String roomManager(Model model) {
+        List<Dorm> dormList = dormRepository.findAll();
+        model.addAttribute("dorms", dormList);
+        return "room-status-manager";
+    }
+}
