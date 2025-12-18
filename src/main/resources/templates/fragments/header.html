@@ -34,6 +34,11 @@
                     인증코드 생성
                 </a>
             </li>
+            <li class="nav-item me-3">
+                <a class="nav-link text-dark" sec:authorze="isAuthenticated()" th:href="@{/logout}">
+                    로그아웃
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
