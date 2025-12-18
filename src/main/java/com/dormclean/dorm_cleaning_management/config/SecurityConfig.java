@@ -22,7 +22,7 @@ public class SecurityConfig {
                                                 .requestMatchers("/check", "/login", "/loginProc")
                                                 // .requestMatchers("/**")
                                                 .permitAll()
-                                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                                                 .anyRequest().authenticated())
                                 .csrf(csrf -> csrf.disable())
                                 .formLogin(form -> form
