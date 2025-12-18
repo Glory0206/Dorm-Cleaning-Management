@@ -25,15 +25,12 @@
                                 <td class="floor-separator" colspan="100%"></td>
                             </tr>
                             <tr>
-                                <th class="room-cell" th:text="${superAdmin.username}"></th>
+                                <td class="room-cell" th:text="${superAdmin.username}" style="font-weight: bold;"></td>
                             </tr>
                         </table>
                         <label for="adminAccount" class="form-label mt-4"> 관리자 계정</label>
                         <!-- 계정 그리드 -->
-                        <table class="room-table">
-                            <tr>
-                                <td class="floor-separator" colspan="100%"></td>
-                            </tr>
+                        <table id="accountGrid" class="room-table">
                         </table>
                     </div>
                 </div>
@@ -95,6 +92,34 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
+    const accountGrid = document.getElementById('accountGrid');
+
+    async function loadAccoundList() {
+        accountGrid.innerHTML = "";
+        let sep = document.createElement('tr');
+        const sepTd = document.createElement('td');
+        sepTd.classList.add('floor-separator');
+        sepTd.colSpan = "100%";
+        sep.appendChild(sepTd);
+        accountGrid.appendChild(sep);
+        try {
+            const res = await axios.get('/admin/api/accounts');
+            let accounts = res.data;
+
+            accounts.forEach(account => {
+                let row = document.createElement('tr');
+                const td = document.createElement('td');
+                td.classList.add('room-cell');
+                td.style.fontWeight = "bold";
+                td.innerText = `${account.username}`;
+                row.appendChild(td);
+                accountGrid.appendChild(row);
+            });
+        } catch (err) {
+            accountGrid.innerHTML = `<div class="room-cell">실패</div>`;
+        }
+    }
+    loadAccoundList();
 </script>
 
 <footer th:replace="~{fragments/footer :: footerFragment}"></footer>
