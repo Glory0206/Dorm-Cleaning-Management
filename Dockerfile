@@ -8,6 +8,7 @@ COPY gradle gradle
 RUN ./gradlew dependencies --no-daemon || true
 
 COPY . .
+RUN chmod +x gradlew
 RUN ./gradlew bootJar --no-daemon
 
 # ---------- 실행 ----------
