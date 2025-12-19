@@ -37,10 +37,10 @@
             </div>
             <div class="col-md-8">
                 <div class="row g-4">
-                    <!-- 계정 추가 -->
+                    <!-- 계정 등록 -->
                     <div class="col-md-6">
                         <div class="card p-4 h-100">
-                            <h4 class="mb-3">계정 추가</h4>
+                            <h4 class="mb-3">계정 등록</h4>
                             <form id="createAccountForm">
                                 <div class="mb-3">
                                     <label for="username" class="form-label">관리자 ID</label>
@@ -120,6 +120,39 @@
         }
     }
     loadAccoundList();
+
+    // 관리자 계정 등록
+    document.getElementById('createAccountForm').addEventListener('submit', async (e) => {
+        e.preventDefault(); // 폼 기본 제출 방지
+
+        const username = document.getElementById('username').value;
+        const password1 = document.getElementById('password1').value;
+        const password2 = document.getElementById('password2').value;
+        const accountStatus = document.getElementById('accountStatus');
+
+        // 비밀번호 확인
+        if (password1 !== password2) {
+            accountStatus.textContent = '⚠️ 비밀번호가 일치하지 않습니다.';
+            accountStatus.style.color = 'red';
+            return; // 서버 요청 중단
+        }
+
+        try {
+            const res = await axios.post('/admin/api/signup', {
+                username: username,
+                password: password1
+            });
+            accountStatus.textContent = '✅ 관리자 계정이 등록되었습니다!';
+            accountStatus.style.color = 'blue';
+
+            e.target.reset();
+            loadAccoundList();
+        } catch (err) {
+            const msg = err?.response?.data?.message || '계정을 등록하지 못하였습니다.';
+            accountStatus.textContent = `⚠️ ${msg}`;
+            accountStatus.style.color = 'red';
+        }
+    });
 </script>
 
 <footer th:replace="~{fragments/footer :: footerFragment}"></footer>
