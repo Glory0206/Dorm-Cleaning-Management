@@ -19,9 +19,10 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/check", "/login", "/loginProc")
+                                                .requestMatchers("/check", "/api/check/**", "/login", "/loginProc")
                                                 // .requestMatchers("/**")
                                                 .permitAll()
+                                                .requestMatchers("/admin/account-manager").hasAnyRole("SUPERADMIN")
                                                 .requestMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                                                 .anyRequest().authenticated())
                                 .csrf(csrf -> csrf.disable())
