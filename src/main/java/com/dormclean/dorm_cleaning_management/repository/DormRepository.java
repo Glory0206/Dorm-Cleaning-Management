@@ -14,5 +14,7 @@ public interface DormRepository extends JpaRepository<Dorm, Long> {
 
     Optional<Dorm> findByDormCode(String dormCode);
 
+    List<Dorm> findByDormCodeIn(List<String> dormCodes);
+
     List<Dorm> findAllByOrderByDormCodeAsc();
 }

@@ -26,15 +26,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     // 특정 기숙사의 전체 방 조회
     List<Room> findByDorm(Dorm dorm);
 
-    List<Room> findByDorm_DormCode(String dormCode);
-
-    // 층별 조회
-    List<Room> findByDormAndFloor(Dorm dorm, Integer floor);
-
     // 특정 기숙사의 방 조회
     Optional<Room> findByDormAndRoomNumber(Dorm dorm, String roomNumber);
 
-    List<Room> findByDormAndRoomNumberIn(Dorm dorm, List<String> roomNumbers);
+    List<Room> findByDormIn(List<Dorm> dorms);
 
     @Modifying(clearAutomatically = true)
     @Query("""
