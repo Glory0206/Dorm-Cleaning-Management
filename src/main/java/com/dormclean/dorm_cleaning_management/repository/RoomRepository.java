@@ -5,6 +5,7 @@ import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.dormclean.dorm_cleaning_management.entity.Room;
@@ -28,8 +29,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     // 특정 기숙사의 방 조회
     Optional<Room> findByDormAndRoomNumber(Dorm dorm, String roomNumber);
-
-    List<Room> findByDormIn(List<Dorm> dorms);
 
     @Modifying(clearAutomatically = true)
     @Query("""
@@ -99,4 +98,13 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     from Room r join r.dorm d where d.dormCode = :dormCode and r.roomNumber = :roomNumber
     """)
     Room findRoomByDormCodeAndRoomNumber(String dormCode, String roomNumber);
+
+    @Query("""
+    select r
+    from Room r
+    join fetch r.dorm d
+    left join fetch r.qrCode q
+    where d.dormCode in :dormCodes
+""")
+    List<Room> findAllRoomsWithDormAndQrByDormCodes(@Param("dormCodes") List<String> dormCodes);
 }
