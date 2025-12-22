@@ -347,12 +347,12 @@
                 headers: { "Content-Type": "multipart/form-data" }
             });
 
-            statusEl.textContent = "✅ 호실 일괄 등록 완료!";
+            statusEl.textContent = "✅ 호실을 일괄 등록하였습니다.";
             statusEl.style.color = "blue";
 
             loadRooms();
         } catch (err) {
-            statusEl.textContent = "⚠️ 업로드 중 오류 발생!";
+            statusEl.textContent = "⚠️ 호실 일괄 등록에 실패하였습니다.";
             statusEl.style.color = "red";
         }
     }

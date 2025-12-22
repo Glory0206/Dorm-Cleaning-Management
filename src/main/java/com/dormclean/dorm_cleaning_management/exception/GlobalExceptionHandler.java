@@ -5,6 +5,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.dormclean.dorm_cleaning_management.dto.exception.ErrorResponseDto;
+
 import java.util.Map;
 
 @RestControllerAdvice(basePackages = "com.dormclean.dorm_cleaning_management")
@@ -37,5 +39,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .badRequest()
                 .body(Map.of("message", e.getMessage()));
+    }
+
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ErrorResponseDto> handle(BaseException e) {
+        return ResponseEntity
+                .status(e.getErrorCode().getStatus())
+                .body(ErrorResponseDto.from(e));
     }
 }

@@ -31,6 +31,7 @@
                         <label for="adminAccount" class="form-label mt-4"> 관리자 계정</label>
                         <!-- 계정 그리드 -->
                         <table id="accountGrid" class="room-table">
+                            <div class="room-cell">관리자 계정 정보를 불러오는 중입니다.</div>
                         </table>
                     </div>
                 </div>
@@ -116,7 +117,7 @@
                 accountGrid.appendChild(row);
             });
         } catch (err) {
-            accountGrid.innerHTML = `<div class="room-cell">실패</div>`;
+            accountGrid.innerHTML = `<div class="room-cell">관리자 계정 정보를 불러오지 못하였습니다.</div>`;
         }
     }
     loadAccoundList();

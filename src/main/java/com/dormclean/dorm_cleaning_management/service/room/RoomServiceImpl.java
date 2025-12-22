@@ -4,6 +4,9 @@ import com.dormclean.dorm_cleaning_management.dto.room.*;
 import com.dormclean.dorm_cleaning_management.entity.Dorm;
 import com.dormclean.dorm_cleaning_management.entity.Room;
 import com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus;
+import com.dormclean.dorm_cleaning_management.exception.dorm.DormNotFoundException;
+import com.dormclean.dorm_cleaning_management.exception.room.InvalidRoomStatusException;
+import com.dormclean.dorm_cleaning_management.exception.room.RoomNotFoundException;
 import com.dormclean.dorm_cleaning_management.repository.DormRepository;
 import com.dormclean.dorm_cleaning_management.repository.RoomRepository;
 
@@ -13,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,7 +29,7 @@ public class RoomServiceImpl implements RoomService {
         public Room createRoom(CreateRoomRequestDto dto) {
 
                 Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                                .orElseThrow(() -> new IllegalArgumentException("해당 생활관이 존재하지 않습니다."));
+                                .orElseThrow(DormNotFoundException::new);
 
                 Integer floor = extractFloor(dto.roomNumber());
 
@@ -79,7 +81,7 @@ public class RoomServiceImpl implements RoomService {
         @Override
         public List<Integer> getFloors(String dormCode) {
                 Dorm dorm = dormRepository.findByDormCode(dormCode)
-                                .orElseThrow(() -> new IllegalArgumentException("Dorm not found"));
+                                .orElseThrow(DormNotFoundException::new);
 
                 return roomRepository.findByDorm(dorm).stream()
                                 .map(Room::getFloor)
@@ -96,10 +98,10 @@ public class RoomServiceImpl implements RoomService {
                         RoomStatusUpdateDto dto) {
 
                 Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                                .orElseThrow(() -> new IllegalArgumentException("해당 생활관을 찾을 수 없습니다."));
+                                .orElseThrow(DormNotFoundException::new);
 
                 Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
-                                .orElseThrow(() -> new IllegalArgumentException("해당 호실을 찾을 수 없습니다."));
+                                .orElseThrow(RoomNotFoundException::new);
 
                 Instant now = Instant.now();
 
@@ -116,7 +118,7 @@ public class RoomServiceImpl implements RoomService {
                                 room.updateStatus(RoomStatus.VACANT);
                                 room.updateCheckOutAt(now);
                         }
-                        default -> throw new IllegalArgumentException("잘못된 상태값");
+                        default -> throw new InvalidRoomStatusException();
                 }
 
                 return new RoomListResponseDto(
@@ -133,7 +135,7 @@ public class RoomServiceImpl implements RoomService {
         @Transactional
         public int updateRoomStatusBulk(BulkRoomStatusUpdateDto dto, Instant now) {
                 Dorm dorm = dormRepository.findByDormCode(dto.dormCode())
-                                .orElseThrow(() -> new IllegalArgumentException("생활관 없음"));
+                                .orElseThrow(DormNotFoundException::new);
 
                 RoomStatus status = RoomStatus.valueOf(dto.newRoomStatus());
 
@@ -150,9 +152,9 @@ public class RoomServiceImpl implements RoomService {
         @Transactional
         public void deleteRoom(String dormCode, String roomNumber) {
                 Dorm dorm = dormRepository.findByDormCode(dormCode)
-                                .orElseThrow(() -> new IllegalArgumentException("해당 상활관을 찾을 수 없습니다."));
+                                .orElseThrow(DormNotFoundException::new);
                 Room room = roomRepository.findByDormAndRoomNumber(dorm, roomNumber)
-                                .orElseThrow(() -> new IllegalArgumentException("해당 호실을 찾을 수 없습니다."));
+                                .orElseThrow(RoomNotFoundException::new);
 
                 roomRepository.delete(room);
         }

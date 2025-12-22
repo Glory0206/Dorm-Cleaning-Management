@@ -3,6 +3,7 @@ package com.dormclean.dorm_cleaning_management.service.cleaningCode;
 import com.dormclean.dorm_cleaning_management.dto.cleaningCode.GetCleaningCodeResponseDto;
 import com.dormclean.dorm_cleaning_management.dto.cleaningCode.RegistrationCleaningCodeRequestDto;
 import com.dormclean.dorm_cleaning_management.entity.CleaningCode;
+import com.dormclean.dorm_cleaning_management.exception.qr.QrNotFoundException;
 import com.dormclean.dorm_cleaning_management.repository.CleaningCodeRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class CleaningCodeServiceImpl implements CleaningCodeService {
     @Transactional
     public void registration(@Valid RegistrationCleaningCodeRequestDto dto) {
         CleaningCode existingCode = cleaningCodeRepository.findById(1L)
-                .orElse(null);
+                .orElseThrow(QrNotFoundException::new);
 
         if (existingCode != null) {
             // 이미 있다면 덮어쓰기
