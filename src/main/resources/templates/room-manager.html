@@ -285,8 +285,8 @@
                 e.target.reset();
                 loadRooms(); // 갱신
             } catch (err) {
-                const message = err.response.data.message;
-                statusEl.textContent = `⚠️ ${roomNumber}호 추가 실패: ${message}`;
+                const msg = err.response.data.message || `${roomNumber}호를 추가하지 못하였습니다.`;
+                statusEl.textContent = `⚠️ ${msg}`;
                 statusEl.style.color = 'red';
             }
         });
@@ -317,7 +317,8 @@
             e.target.reset();
             loadRooms(); // 갱신
         } catch (err) {
-            statusEl.textContent = `⚠️ ${roomNumber}호 삭제에 실패하였습니다.`;
+            const msg = err?.response?.data?.message || `${roomNumber}호 삭제에 실패하였습니다.`;
+            statusEl.textContent = `⚠️ ${msg}`;
             statusEl.style.color = 'red';
         }
     });
@@ -352,7 +353,8 @@
 
             loadRooms();
         } catch (err) {
-            statusEl.textContent = "⚠️ 호실 일괄 등록에 실패하였습니다.";
+            const msg = err?.response?.data?.message || "호실 일괄 등록에 실패하였습니다.";
+            statusEl.textContent = `⚠️ ${msg}`;
             statusEl.style.color = "red";
         }
     }
@@ -399,7 +401,8 @@
             bootstrap.Modal.getInstance(document.getElementById('confirmDeleteAllModal')).hide();
 
         } catch (err) {
-            statusEl.textContent = `⚠️ 호실 일괄 삭제에 실패하였습니다.`;
+            const msg = err?.response?.data?.message || "호실 일괄 삭제에 실패하였습니다.";
+            statusEl.textContent = `⚠️ ${msg}`;
             statusEl.style.color = 'red';
         }
     });
