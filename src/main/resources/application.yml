@@ -19,8 +19,8 @@ spring:
       hibernate:
         jdbc:
           batch_size: 100 # 100개씩 묶어서 한 번에 보냄
-          order_inserts: true # INSERT 문을 모아서 처리
-          order_updates: true # UPDATE 문을 모아서 처리
+        order_inserts: true # INSERT 문을 모아서 처리
+        order_updates: true # UPDATE 문을 모아서 처리
         format_sql: false
         generate_statistics: false
   datasource:
