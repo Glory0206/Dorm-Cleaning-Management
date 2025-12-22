@@ -72,8 +72,12 @@ public class QrCodeServiceImpl implements QrCodeService {
 
         String labelText = String.format("%s동 %s호", dto.dormCode(), dto.roomNumber());
 
-        // QR 이미지 생성
-        return generateQrCode(content, 250, 250, labelText);
+        try {
+            // QR 이미지 생성
+            return generateQrCode(content, 250, 250, labelText);
+        } catch (Exception e) {
+            throw new QrCreationFailedException();
+        }
     }
 
     @Override

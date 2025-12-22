@@ -163,26 +163,36 @@
         qrImage.style.display = 'none';
         loadingSpinner.style.display = 'block';
 
-        const params = new URLSearchParams({ dormCode: dormCode, roomNumber: roomNumber });
+        const params = new URLSearchParams({ dormCode, roomNumber });
         const apiUrl = `/admin/api/qr/generate?${params.toString()}`;
 
-        qrImage.onload = function() {
-            loadingSpinner.style.display = 'none';
-            qrImage.style.display = 'block';
-        };
+        fetch(apiUrl)
+            .then(async response => {
+                if (!response.ok) {
+                    // 서버에서 내려준 에러 메시지 파싱
+                    const errorData = await response.json();
+                    throw errorData;
+                }
+                return response.blob(); // PNG 이미지
+            })
+            .then(blob => {
+                const imageUrl = URL.createObjectURL(blob);
+                qrImage.src = imageUrl;
+                qrImage.style.display = 'block';
 
-        qrImage.onerror = function() {
-            loadingSpinner.style.display = 'none';
-            alert('QR 코드 생성 실패');
-            resultArea.style.display = 'none';
-        };
-
-        qrImage.src = apiUrl;
-
-        // 파일명 정제를 위해 괄호 등 제거 (선택사항)
-        downloadLink.href = apiUrl;
-        downloadLink.download = `QR_${dormCode}동_${roomNumber}호.png`;
+                downloadLink.href = imageUrl;
+                downloadLink.download = `QR_${dormCode}동_${roomNumber}호.png`;
+            })
+            .catch(err => {
+                const message = err?.message ?? 'QR 코드 생성에 실패했습니다.';
+                alert(message);
+                resultArea.style.display = 'none';
+            })
+            .finally(() => {
+                loadingSpinner.style.display = 'none';
+            });
     }
+
 
     // 일괄 다운로드 함수
     function downloadZip() {
