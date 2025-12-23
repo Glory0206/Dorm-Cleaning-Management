@@ -387,7 +387,8 @@
             bulkMode = true;
             document.getElementById('bulkSelectBtn').click();
 
-
+            if (!dormCode) return;
+            
             // 층 목록 갱신
             try {
                 const res = await fetch(`/admin/api/floors?dormCode=${dormCode}`);
