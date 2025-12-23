@@ -41,7 +41,7 @@ public class QrDataProcessor {
             qrCodesToSave.add(qrCode);
 
             resultData.add(new QrGenerationData(
-                    String.format("%s/check?token=%s", host, qrCode.getUuid()),
+                    String.format("%s/?token=%s", host, qrCode.getUuid()),
                     String.format("%s동 %s호", room.getDorm().getDormCode(), room.getRoomNumber()),
                     String.format("%s/QR_%s.png", room.getDorm().getDormCode(), room.getRoomNumber())
             ));
