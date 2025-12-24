@@ -28,6 +28,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -69,9 +71,9 @@ public class QrCodeServiceImpl implements QrCodeService {
 
         // URL 생성
         String content;
-        if(host.contains("8080")){
+        if (host.contains("8080")) {
             content = String.format("%s/check?token=%s", host, qrCode.getUuid());
-        } else{
+        } else {
             content = String.format("%s/?token=%s", host, qrCode.getUuid());
         }
 

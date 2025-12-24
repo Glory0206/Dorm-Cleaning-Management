@@ -3,6 +3,7 @@ package com.dormclean.dorm_cleaning_management.service.qr;
 import com.dormclean.dorm_cleaning_management.dto.qr.QrRequestDto;
 import com.dormclean.dorm_cleaning_management.dto.qr.QrResponseDto;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.util.List;
 
