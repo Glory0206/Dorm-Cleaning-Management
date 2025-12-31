@@ -28,16 +28,12 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
         List<Room> findByDorm(Dorm dorm);
 
         // 특정 기숙사의 방 조회
+        @Query("SELECT r FROM Room r JOIN FETCH r.dorm d WHERE d.dormCode = :dormCode AND r.roomNumber = :roomNumber")
         Optional<Room> findByDormAndRoomNumber(Dorm dorm, String roomNumber);
 
-        // 특정 기숙사의 방 조회
-        @Query("""
-                        select r
-                        from Room r
-                        where r.dorm.dormCode = :dormCode
-                        and r.roomNumber = :roomNumber
-                        """)
-        Optional<Room> findByDormCodeAndRoomNumber(String dormCode, String roomNumber);
+        @Query("SELECT r FROM Room r JOIN FETCH r.dorm d WHERE d.dormCode = :dormCode AND r.roomNumber = :roomNumber")
+        Optional<Room> findByDormCodeAndRoomNumber(@Param("dormCode") String dormCode,
+                        @Param("roomNumber") String roomNumber);
 
         @Modifying(clearAutomatically = true)
         @Query("""
