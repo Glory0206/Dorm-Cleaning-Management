@@ -430,24 +430,6 @@
 
             bulkMode = true;
             document.getElementById('bulkSelectBtn').click();
-
-            // 층 목록 갱신
-            // try {
-            //     // const res = await fetch(`/admin/api/floors?dormCode=${dormCode}`);
-            //     // const floors = await res.json();
-
-            //     if (!floors || floors.length === 0) return;
-
-            //     floors.forEach(floor => {
-            //         const opt = document.createElement('option');
-            //         opt.value = floor;
-            //         opt.textContent = `${floor}층`;
-            //         floorSelect.appendChild(opt);
-            //     });
-            // } catch (error) {
-            //     const msg = error?.response?.data?.message;
-            //     alert(msg);
-            // }
         });
 
         // 모달에서 사용할 정보
