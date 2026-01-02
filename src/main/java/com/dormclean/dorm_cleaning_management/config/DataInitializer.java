@@ -21,12 +21,11 @@ public class DataInitializer implements ApplicationRunner {
         if (userRepository.findByUsername("admin").isEmpty()) {
             AdminUser admin = AdminUser.builder()
                     .username("admin")
-                    .password(passwordEncoder.encode("1111"))
+                    .password(passwordEncoder.encode("dorm1261!!%%"))
                     .role(UserRole.SUPERADMIN) // 또는 Role.SUPERADMIN (Enum 사용 시)
                     .build();
 
             userRepository.save(admin);
-            System.out.println(">>> 초기 관리자 계정 생성 완료 (admin / 1111)");
         }
     }
 }
