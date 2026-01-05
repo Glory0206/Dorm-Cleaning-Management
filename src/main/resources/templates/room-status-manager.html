@@ -730,7 +730,6 @@
         function applyStatusFilter(status) {
             const showFloorHeader = dormSelect.value !== "";
 
-            // ❌ offsetParent 쓰지 말 것
             const cards = document.querySelectorAll('.room-card');
 
             cards.forEach(card => {
@@ -809,6 +808,10 @@
             if (allTab) {
                 allTab.classList.add('active');
             }
+
+            selectedStatus = ""
+
+            applyStatusFilter(selectedStatus);
         }
 
         const overlay = document.getElementById('progressOverlay');
