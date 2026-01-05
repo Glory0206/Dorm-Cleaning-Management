@@ -29,7 +29,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
   // 특정 기숙사의 방 조회
   @Query("SELECT r FROM Room r JOIN FETCH r.dorm d WHERE d.dormCode = :dormCode AND r.roomNumber = :roomNumber")
-  Optional<Room> findByDormCodeAndRoomNumber(@Param("dormCode") String dormCode,
+  Optional<Room> findByDormCodeAndRoomNumber(
+      @Param("dormCode") String dormCode,
       @Param("roomNumber") String roomNumber);
 
   @Modifying(clearAutomatically = true)
@@ -41,10 +42,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
         and r.roomNumber in :roomNumbers
       """)
   int bulkStatusUpdate(
-      Dorm dorm,
-      List<String> roomNumbers,
-      RoomStatus status,
-      Instant now);
+      @Param("dorm") Dorm dorm,
+      @Param("roomNumbers") List<String> roomNumbers,
+      @Param("status") RoomStatus status,
+      @Param("now") Instant now);
 
   @Query("""
       select new com.dormclean.dorm_cleaning_management.dto.room.RoomListResponseDto(
@@ -97,7 +98,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
       select r
       from Room r join r.dorm d where d.dormCode = :dormCode and r.roomNumber = :roomNumber
       """)
-  Room findRoomByDormCodeAndRoomNumber(@Param("dormCode") String dormCode,
+  Room findRoomByDormCodeAndRoomNumber(
+      @Param("dormCode") String dormCode,
       @Param("roomNumber") String roomNumber);
 
   @Modifying(clearAutomatically = true, flushAutomatically = true)
@@ -117,26 +119,33 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
       left join fetch r.qrCode q
       where d.dormCode in :dormCodes
       """)
-  List<Room> findAllRoomsWithDormAndQrByDormCodes(@Param("dormCodes") List<String> dormCodes);
+  List<Room> findAllRoomsWithDormAndQrByDormCodes(
+      @Param("dormCodes") List<String> dormCodes);
 
   @Modifying(clearAutomatically = true)
   @Query("UPDATE Room r SET r.roomStatus = 'OCCUPIED' " +
       "WHERE r.roomNumber = :roomNumber " +
       "AND r.dorm.dormCode = :dormCode " +
       "AND r.roomStatus = 'READY'")
-  int updateStatusToCheckIn(String dormCode, String roomNumber);
+  int updateStatusToCheckIn(
+      @Param("dormCode") String dormCode,
+      @Param("roomNumber") String roomNumber);
 
   @Modifying(clearAutomatically = true)
   @Query("UPDATE Room r SET r.roomStatus = 'VACANT' " +
       "WHERE r.roomNumber = :roomNumber " +
       "AND r.dorm.dormCode = :dormCode " +
       "AND r.roomStatus = 'OCCUPIED'")
-  int updateStatusToCheckOut(String dormCode, String roomNumber);
+  int updateStatusToCheckOut(
+      @Param("dormCode") String dormCode,
+      @Param("roomNumber") String roomNumber);
 
   @Modifying(clearAutomatically = true)
   @Query("UPDATE Room r SET r.roomStatus = 'READY' " +
       "WHERE r.roomNumber = :roomNumber " +
       "AND r.dorm.dormCode = :dormCode " +
       "AND r.roomStatus = 'VACANT'")
-  int updateStatusToCleaned(String dormCode, String roomNumber);
+  int updateStatusToCleaned(
+      @Param("dormCode") String dormCode,
+      @Param("roomNumber") String roomNumber);
 }
