@@ -184,7 +184,7 @@
             const date = new Date(iso);
             if (isNaN(date)) return raw; // 파싱 실패하면 원본 출력
 
-            const MM = String(date.getMonth()).padStart(2, "0");
+            const MM = String(date.getMonth()+1).padStart(2, "0");
             const dd = String(date.getDate()).padStart(2, "0");
             const hh = String(date.getHours()).padStart(2, "0");
             const mm = String(date.getMinutes()).padStart(2, "0");
@@ -411,7 +411,12 @@
             // 층 드롭다운 초기화
             floorSelect.innerHTML = '<option value="" selected disabled>층을 선택하세요</option>';
             
-            if (!dormCode) return;
+            if (!dormCode) {
+                // 갱신
+                loadRooms(); 
+                resetStatusTabs();
+                return;
+            }
 
             const floors = floorInfo[dormCode];
 
@@ -427,9 +432,6 @@
             // 갱신
             loadRooms(); 
             resetStatusTabs();
-
-            bulkMode = true;
-            document.getElementById('bulkSelectBtn').click();
         });
 
         // 모달에서 사용할 정보
@@ -726,10 +728,28 @@
         // 상태 필터 적용 함수
         let selectedStatus = "";
         function applyStatusFilter(status) {
-            const cards = Array.from(document.querySelectorAll('.room-card'));
+            const showFloorHeader = dormSelect.value !== "";
+
+            const cards = document.querySelectorAll('.room-card');
 
             cards.forEach(card => {
-                const cardStatus = 
+                const d = card.dataset.dormCode;
+                const f = card.closest('.room-grid')?.dataset.floor;
+
+                // 👉 dorm / floor 조건 먼저 체크
+                const dormMatch =
+                    dormSelect.value === "" || dormSelect.value === d;
+
+                const floorMatch =
+                    floorSelect.value === "" || floorSelect.value === f;
+
+                if (!dormMatch || !floorMatch) {
+                    card.style.display = "none";
+                    return;
+                }
+
+                // 👉 상태 조건
+                const cardStatus =
                     card.classList.contains('occupied') ? "OCCUPIED" :
                     card.classList.contains('vacant') ? "VACANT" :
                     "READY";
@@ -738,7 +758,44 @@
                     (status === "" || status === cardStatus) ? "flex" : "none";
             });
 
+            updateHeadersByVisibleRooms(showFloorHeader);
             syncSelectAllButton();
+        }
+
+        function updateHeadersByVisibleRooms(showFloorHeader) {
+
+            // ✅ 층 단위 처리
+            document.querySelectorAll('.room-grid').forEach(grid => {
+                const floorTitle = document.querySelector(
+                    `.floor-title[data-dorm-code="${grid.dataset.dormCode}"][data-floor="${grid.dataset.floor}"]`
+                );
+
+                const hasRoom =
+                    grid.querySelectorAll('.room-card[style*="display: flex"]').length > 0;
+
+                grid.style.display = hasRoom ? 'flex' : 'none';
+
+                if (floorTitle) {
+                    floorTitle.style.display =
+                        showFloorHeader && hasRoom ? 'flex' : 'none';
+                }
+            });
+
+            // ✅ 생활관 단위 처리
+            document.querySelectorAll('.dorm-title').forEach(dormTitle => {
+                const dormCode = dormTitle.dataset.dormCode;
+                const floorDiv = document.querySelector(
+                    `.floor-div[data-dorm-code="${dormCode}"]`
+                );
+
+                const hasRoom =
+                    floorDiv.querySelectorAll('.room-card[style*="display: flex"]').length > 0;
+
+                dormTitle.style.display =
+                    !showFloorHeader && hasRoom ? 'flex' : 'none';
+
+                floorDiv.style.display = hasRoom ? 'block' : 'none';
+            });
         }
 
         // 상태 기준으로 검색 탭 초기화
@@ -751,6 +808,10 @@
             if (allTab) {
                 allTab.classList.add('active');
             }
+
+            selectedStatus = ""
+
+            applyStatusFilter(selectedStatus);
         }
 
         const overlay = document.getElementById('progressOverlay');

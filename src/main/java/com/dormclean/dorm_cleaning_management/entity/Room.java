@@ -48,7 +48,7 @@ public class Room {
         this.floor = floor;
         this.roomNumber = roomNumber;
         this.roomStatus = status != null ? status : RoomStatus.READY;
-        this.cleanedAt = cleanedAt;
+        this.cleanedAt = cleanedAt != null ? cleanedAt : Instant.now();
         this.checkInAt = checkInAt;
         this.checkOutAt = checkOutAt;
     }
@@ -62,13 +62,15 @@ public class Room {
     }
 
     public void checkIn() {
-        if (!canCheckIn()) throw new RoomCheckInNotAllowedException();
+        if (!canCheckIn())
+            throw new RoomCheckInNotAllowedException();
         this.roomStatus = RoomStatus.OCCUPIED;
         this.checkInAt = Instant.now();
     }
 
     public void checkOut() {
-        if (!canCheckOut()) throw new RoomCheckOutNotAllowedException();
+        if (!canCheckOut())
+            throw new RoomCheckOutNotAllowedException();
         this.roomStatus = RoomStatus.VACANT;
         this.checkOutAt = Instant.now();
     }
