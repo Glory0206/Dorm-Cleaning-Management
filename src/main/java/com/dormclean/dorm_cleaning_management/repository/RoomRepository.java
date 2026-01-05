@@ -33,13 +33,31 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
       @Param("dormCode") String dormCode,
       @Param("roomNumber") String roomNumber);
 
-  @Modifying(clearAutomatically = true)
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
   @Query("""
-      update Room r
-      set r.roomStatus = :status,
-          r.cleanedAt = :now
-      where r.dorm = :dorm
-        and r.roomNumber in :roomNumbers
+          update Room r
+          set r.roomStatus = :status,
+
+              r.checkInAt = case
+                  when :status = com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus.OCCUPIED
+                  then :now
+                  else r.checkInAt
+              end,
+
+              r.cleanedAt = case
+                  when :status = com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus.READY
+                  then :now
+                  else r.cleanedAt
+              end,
+
+              r.checkOutAt = case
+                  when :status = com.dormclean.dorm_cleaning_management.entity.enums.RoomStatus.VACANT
+                  then :now
+                  else r.checkOutAt
+              end
+
+          where r.dorm = :dorm
+            and r.roomNumber in :roomNumbers
       """)
   int bulkStatusUpdate(
       @Param("dorm") Dorm dorm,
