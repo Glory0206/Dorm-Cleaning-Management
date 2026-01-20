@@ -67,3 +67,6 @@ project-root
              ├── application-dev.yml   # 개발 환경 설정
              └── application-prod.yml  # 배포 환경 설정
 ```
+
+## DeepWiki
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Koreatech-Dorm/Dorm-Cleaning-Management)
